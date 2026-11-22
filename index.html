@@ -3,1126 +3,1688 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="R. Rusaith Ahamed (Zai) — 3D Cinematic Portfolio. Graphic Designer (1 Year Exp), Full-Stack Web Developer, AI Systems Creator, and ICT Specialist." />
-  <meta name="keywords" content="R. Rusaith Ahamed, Zai, Graphic Designer, 3D Portfolio, Three.js, WebGL, Web Developer, AI Trainer, Zai Neo, Sri Lanka" />
-  <meta name="author" content="R. Rusaith Ahamed (Zai)" />
-  <meta name="robots" content="index, follow" />
+  <title>Facet — Designed in glass</title>
+  <meta name="description" content="Facet — Real-time material studio. Author dispersion, transmission, and refraction in the browser." />
 
-  <!-- Open Graph / Cinematic Metadata -->
-  <meta property="og:title" content="R. Rusaith Ahamed — 3D Cinematic Portfolio" />
-  <meta property="og:description" content="Cinematic 3D WebGL Portfolio | Graphic Designer (1 Year Exp) & Full-Stack Tech Creator" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://zaieduhub.github.io/zaifirstview/" />
-  <meta property="og:image" content="images/profile.jpg" />
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="R. Rusaith Ahamed — 3D Cinematic Portfolio" />
-  <meta name="twitter:description" content="Cinematic 3D WebGL Portfolio | Graphic Designer & Creative Technologist" />
-  <meta name="twitter:image" content="images/profile.jpg" />
-
-  <title>R. RUSAITH AHAMED // 3D CINEMATIC PORTFOLIO</title>
-
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💎</text></svg>" />
-
-  <!-- Google Fonts: Space Grotesk, Inter, Fira Code -->
+  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/src/style.css" />
-  <script type="module" src="/src/main.js"></script>
+  <!-- Three.js 0.169.0 Import Map via jsDelivr -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <style>
+    /* =========================================================
+       BASE & RESET
+       ========================================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #050507;
+      color: #ffffff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      user-select: none;
+    }
+
+    /* WebGL Canvas */
+    #webgl-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      display: block;
+      pointer-events: auto;
+    }
+
+    /* =========================================================
+       DOM TEXT LAYER (HOMOGRAPHY MATRIX3D TRANSFORMED)
+       ========================================================= */
+    #dom-layer-panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      pointer-events: none;
+      transform-origin: 0 0;
+      user-select: text;
+      opacity: 1;
+      transition: opacity 0.25s ease-out;
+    }
+
+    #dom-layer-panel.hidden {
+      opacity: 0;
+      pointer-events: none !important;
+    }
+
+    /* Blue selection box as specified in prompt */
+    #dom-layer-panel ::selection,
+    #dom-layer-nav ::selection,
+    .definitions-overlay ::selection {
+      background: #1d4ed8;
+      color: #ffffff;
+    }
+
+    /* Nav Slab DOM Layer */
+    #dom-layer-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      pointer-events: none;
+      transform-origin: 0 0;
+      user-select: text;
+      opacity: 1;
+      transition: opacity 0.25s ease-out;
+    }
+
+    #dom-layer-nav.hidden {
+      opacity: 0;
+      pointer-events: none !important;
+    }
+
+    /* Interactive hit areas within DOM layer */
+    .hit-interactive {
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    /* Nav slab layout */
+    .nav-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-logo-mark {
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-radius: 3px;
+    }
+
+    .nav-logo-text {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+      color: #ffffff;
+    }
+
+    .nav-center-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13.5px;
+      color: rgba(255, 255, 255, 0.6);
+      transition: color 0.2s ease;
+    }
+
+    .nav-center-links span.link-item {
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    .nav-center-links span.link-item:hover {
+      color: #ffffff;
+    }
+
+    .nav-right-link {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.8);
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    .nav-right-link:hover {
+      color: #ffffff;
+    }
+
+    /* Panel Content */
+    .panel-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 0 54px;
+    }
+
+    .panel-eyebrow {
+      position: absolute;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: rgba(255, 255, 255, 0.38);
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    .panel-headline {
+      position: absolute;
+      font-weight: 500;
+      letter-spacing: -0.045em;
+      line-height: 0.97;
+      background: linear-gradient(180deg, #dcdce0 0%, #bdbdc3 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      white-space: pre-line;
+    }
+
+    .panel-sub {
+      position: absolute;
+      font-weight: 400;
+      line-height: 1.52;
+      color: rgba(255, 255, 255, 0.55);
+      white-space: pre-line;
+    }
+
+    .panel-cta-group {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    /* "Open studio" light pill button */
+    .btn-open-studio {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f1f1f4;
+      color: #050507;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 13.5px;
+      text-decoration: none;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      cursor: pointer;
+    }
+
+    /* Turns green #36d67e on hover as specified */
+    .btn-open-studio:hover {
+      background-color: #36d67e;
+      color: #050507;
+    }
+
+    /* "Read paper →" link */
+    .btn-read-paper {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 400;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.2s ease;
+    }
+
+    .btn-read-paper:hover {
+      text-decoration: underline;
+      color: #ffffff;
+    }
+
+    .panel-footer-left {
+      position: absolute;
+      bottom: 28px;
+      left: 54px;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.34);
+    }
+
+    .panel-footer-right {
+      position: absolute;
+      bottom: 28px;
+      right: 54px;
+      font-size: 11px;
+      font-family: 'Fira Code', monospace;
+      letter-spacing: 0.04em;
+      color: rgba(255, 255, 255, 0.34);
+    }
+
+    /* =========================================================
+       DEFINITIONS VIEW ("REAL-TIME GLASS, IN FIVE TERMS.")
+       ========================================================= */
+    .definitions-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 15;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s;
+    }
+
+    .definitions-overlay.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    /* Column starts at 32.4% W and is 33.9% W wide. Baseline at 35.9% H */
+    .definitions-column {
+      position: absolute;
+      left: 32.4vw;
+      width: 33.9vw;
+      top: 35.9vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .definitions-title {
+      font-weight: 650;
+      font-size: 1.36vw;
+      letter-spacing: -0.022em;
+      color: #ffffff;
+      margin-bottom: 2.2vw;
+      line-height: 1.15;
+    }
+
+    .definitions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.05vw;
+    }
+
+    .definition-item {
+      font-size: 0.73vw;
+      line-height: 1.72;
+      color: rgba(255, 255, 255, 0.60);
+    }
+
+    .definition-item strong {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* "← Back" DOM click target overlay */
+    #back-btn-hitarea {
+      position: fixed;
+      z-index: 30;
+      cursor: pointer;
+      display: none;
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.66vw;
+      font-weight: 500;
+      transform: translate(-50%, -50%);
+      transition: color 0.25s ease;
+      pointer-events: auto;
+    }
+
+    #back-btn-hitarea:hover {
+      color: #b9abff !important;
+    }
+
+    /* =========================================================
+       REDUCED MOTION / NO WEBGL FALLBACK
+       ========================================================= */
+    #fallback-container {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: #050507;
+      color: #ffffff;
+      padding: 4rem 2rem;
+      overflow-y: auto;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #webgl-canvas { display: none; }
+      #dom-layer-panel { display: none; }
+      #dom-layer-nav { display: none; }
+      #fallback-container { display: block; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- ═══════════════ THREE.JS WEBGL RENDER CANVAS ═══════════════ -->
-  <canvas id="bg-canvas"></canvas>
+  <!-- WebGL Render Canvas -->
+  <canvas id="webgl-canvas"></canvas>
 
-  <!-- ═══════════════ CINEMATIC ATMOSPHERE OVERLAYS ═══════════════ -->
-  <div class="film-grain" aria-hidden="true"></div>
-  <div class="cinematic-vignette" aria-hidden="true"></div>
-  <div class="anamorphic-line top" aria-hidden="true"></div>
-  <div class="anamorphic-line bottom" aria-hidden="true"></div>
-
-  <!-- ═══════════════ PRECISION CUSTOM CURSOR ═══════════════ -->
-  <div class="cursor"></div>
-  <div class="cursor-follower"></div>
-
-  <!-- ═══════════════ CINEMATIC PRELOADER ═══════════════ -->
-  <div id="preloader">
-    <div class="preloader-hud">
-      <div class="preloader-rings">
-        <div class="ring ring-outer"></div>
-        <div class="ring ring-middle"></div>
-        <div class="ring ring-core"></div>
-        <div class="core-glyph">Z</div>
+  <!-- Interactive Nav Slab DOM Layer -->
+  <div id="dom-layer-nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <div class="nav-logo-mark"></div>
+        <span class="nav-logo-text">Facet</span>
       </div>
-      <div class="preloader-telemetry">
-        <p class="telemetry-label">// INITIALIZING CINEMATIC ENGINE</p>
-        <div class="telemetry-bar"><div class="telemetry-progress"></div></div>
-        <p class="telemetry-status">LOADING 3D ASSETS & SHADERS... <span class="blink">●</span></p>
+      <div class="nav-center-links">
+        <span class="link-item hit-interactive">Studio</span>
+        <span>·</span>
+        <span class="link-item hit-interactive">Materials</span>
+        <span>·</span>
+        <span class="link-item hit-interactive">Pricing</span>
+      </div>
+      <div class="nav-right-link hit-interactive">Sign in</div>
+    </div>
+  </div>
+
+  <!-- Interactive Panel DOM Layer -->
+  <div id="dom-layer-panel">
+    <div class="panel-inner">
+      <div class="panel-eyebrow">REAL-TIME MATERIAL STUDIO</div>
+      <h1 class="panel-headline">Designed
+in glass.</h1>
+      <p class="panel-sub">Author dispersion, transmission, and refraction in the browser. Live
+previews, real materials.</p>
+      <div class="panel-cta-group">
+        <button class="btn-open-studio hit-interactive" id="btn-open-studio">Open studio</button>
+        <button class="btn-read-paper hit-interactive" id="btn-read-paper">Read paper →</button>
+      </div>
+      <div class="panel-footer-left">© Facet Lab</div>
+      <div class="panel-footer-right">KHR_materials_dispersion</div>
+    </div>
+  </div>
+
+  <!-- Definitions View ("Real-time glass, in five terms.") -->
+  <div class="definitions-overlay" id="definitions-overlay" aria-hidden="true">
+    <div class="definitions-column">
+      <h2 class="definitions-title">Real-time glass, in five terms.</h2>
+      <div class="definitions-list">
+        <p class="definition-item">
+          <strong>Iridescence</strong> — Thin-film wave interference that shifts color with view angle. Essential for soap bubbles, butterfly wings, and anti-reflective optical coatings.
+        </p>
+        <p class="definition-item">
+          <strong>Index of refraction</strong> — The ratio of light speed in vacuum to the medium. Governs Fresnel reflectance at normal incidence and the angle of Snellian bending.
+        </p>
+        <p class="definition-item">
+          <strong>Dispersion</strong> — The variation of IOR with wavelength, producing chromatic separation at refracted boundaries. Quantified by the Abbe number.
+        </p>
+        <p class="definition-item">
+          <strong>Transmission</strong> — Specular passage through the medium without subsurface scattering. Attenuation follows the Beer-Lambert law across the ray path.
+        </p>
+        <p class="definition-item">
+          <strong>Roughness</strong> — Microfacet distribution that scatters specular reflection and refraction, transitioning polished crystal into frosted etched glass.
+        </p>
       </div>
     </div>
   </div>
 
-  <!-- ═══════════════ CINEMATIC TOP HUD & NAVIGATION ═══════════════ -->
-  <header class="navbar" id="navbar">
-    <div class="nav-container">
-      <a href="#home" class="nav-brand">
-        <div class="brand-monogram">
-          <span class="mono-z">Z</span><span class="mono-ai">AI</span>
-        </div>
-        <div class="brand-meta">
-          <span class="brand-name">R. RUSAITH AHAMED</span>
-          <span class="brand-tag">CINEMATIC 3D EDITION</span>
-        </div>
-      </a>
+  <!-- "← Back" DOM click target -->
+  <button id="back-btn-hitarea">← Back</button>
 
-      <!-- Central Nav Links -->
-      <nav class="nav-menu" id="nav-menu">
-        <ul class="nav-links">
-          <li><a href="#home" class="active"><span class="nav-num">01</span> HOME</a></li>
-          <li><a href="#showcase"><span class="nav-num">02</span> GRAPHIC DESIGN</a></li>
-          <li><a href="#about"><span class="nav-num">03</span> ABOUT</a></li>
-          <li><a href="#experience"><span class="nav-num">04</span> TIMELINE</a></li>
-          <li><a href="#skills"><span class="nav-num">05</span> SKILLS</a></li>
-          <li><a href="#education"><span class="nav-num">06</span> EDUCATION</a></li>
-          <li><a href="#contact"><span class="nav-num">07</span> CONTACT</a></li>
-        </ul>
-      </nav>
-
-      <!-- Right HUD Controls -->
-      <div class="nav-actions">
-        <!-- Audio Engine Toggle -->
-        <button id="audio-toggle-btn" class="hud-audio-btn" aria-label="Toggle Cinematic Audio">
-          <div class="audio-bars">
-            <span></span><span></span><span></span><span></span>
-          </div>
-          <span class="audio-text">AUDIO: MUTED</span>
-        </button>
-
-        <!-- Location Telemetry Pill -->
-        <div class="hud-telemetry-pill">
-          <span class="status-dot"></span>
-          <span class="telemetry-text">60 FPS // LK</span>
-        </div>
-
-        <!-- Mobile Menu Toggle -->
-        <button class="nav-toggle" id="nav-toggle" aria-label="Open Mobile Menu">
-          <span></span><span></span><span></span>
-        </button>
+  <!-- Static Fallback View -->
+  <div id="fallback-container">
+    <header style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+      <div style="font-weight: 700; font-size: 1.25rem;">Facet</div>
+      <div>Studio · Materials · Pricing</div>
+    </header>
+    <main>
+      <div style="font-size: 0.8rem; letter-spacing: 0.2em; color: rgba(255,255,255,0.4); margin-bottom: 1rem;">REAL-TIME MATERIAL STUDIO</div>
+      <h1 style="font-size: 3rem; margin-bottom: 1rem; line-height: 1;">Designed in glass.</h1>
+      <p style="color: rgba(255,255,255,0.6); max-width: 500px; line-height: 1.6; margin-bottom: 2rem;">
+        Author dispersion, transmission, and refraction in the browser. Live previews, real materials.
+      </p>
+      <div style="margin-top: 3rem;">
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Real-time glass, in five terms.</h2>
+        <p style="margin-bottom: 1rem; color: rgba(255,255,255,0.7);"><strong>Iridescence</strong> — Thin-film wave interference.</p>
+        <p style="margin-bottom: 1rem; color: rgba(255,255,255,0.7);"><strong>Index of refraction</strong> — The ratio of light speed.</p>
+        <p style="margin-bottom: 1rem; color: rgba(255,255,255,0.7);"><strong>Dispersion</strong> — The variation of IOR with wavelength.</p>
+        <p style="margin-bottom: 1rem; color: rgba(255,255,255,0.7);"><strong>Transmission</strong> — Specular passage without scattering.</p>
+        <p style="margin-bottom: 1rem; color: rgba(255,255,255,0.7);"><strong>Roughness</strong> — Microfacet distribution scattering.</p>
       </div>
-    </div>
-  </header>
-
-  <!-- ═══════════════ HERO SECTION: CINEMATIC REVEAL ═══════════════ -->
-  <section id="home" class="hero-section">
-    <div class="hero-container">
-      <div class="hero-content">
-        <div class="hero-eyebrow animate-on-scroll">
-          <span class="eyebrow-bracket">[</span>
-          <span class="eyebrow-text">DIRECTED BY R. RUSAITH AHAMED // EST. 2024</span>
-          <span class="eyebrow-bracket">]</span>
-        </div>
-
-        <h1 class="hero-title glitch animate-on-scroll delay-1" data-text="R. RUSAITH AHAMED">
-          R. RUSAITH AHAMED
-        </h1>
-
-        <div class="hero-typewriter animate-on-scroll delay-2">
-          <span class="typewriter-prefix">DISCIPLINE // </span>
-          <span id="typed-text" class="typewriter-target">Creative Graphic Designer (1 Yr Exp)</span>
-          <span class="cursor-blink">|</span>
-        </div>
-
-        <p class="hero-lead animate-on-scroll delay-2">
-          Creative Professional &amp; Full-Stack Technologist with specialized expertise in 
-          <strong>Graphic Design (1 Year Experience)</strong>, visual branding, modern 3D WebGL architectures, 
-          and AI infrastructure. Crafting high-fidelity digital experiences that bridge art and technology.
-        </p>
-
-        <!-- Key Feature Badges -->
-        <div class="hero-badges animate-on-scroll delay-3">
-          <div class="hero-badge highlight-gold">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <span>GRAPHIC DESIGNER (1 YR EXP)</span>
-          </div>
-          <div class="hero-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-            <span>WEB &amp; 3D CREATIVE</span>
-          </div>
-          <div class="hero-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            <span>ICT LAB HEAD (3+ YRS)</span>
-          </div>
-          <div class="hero-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-            <span>CREATOR OF "ZAI NEO" AI</span>
-          </div>
-        </div>
-
-        <!-- Call to Actions -->
-        <div class="hero-actions animate-on-scroll delay-3">
-          <a href="#showcase" class="btn btn-primary">
-            <span>EXPLORE DESIGN SHOWCASE</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </a>
-          <a href="#contact" class="btn btn-secondary">
-            <span>INITIATE CONTACT</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          </a>
-          <a href="https://github.com/zaieduhub" target="_blank" rel="noopener noreferrer" class="btn btn-ghost" aria-label="GitHub Profile">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-            <span>GITHUB</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- Right 3D Cinematic Portrait Hologram Card -->
-      <div class="hero-visual animate-on-scroll delay-2">
-        <div class="hologram-card tilt-card">
-          <div class="card-glare"></div>
-          <div class="holo-frame-brackets">
-            <span class="bracket tl"></span><span class="bracket tr"></span>
-            <span class="bracket bl"></span><span class="bracket br"></span>
-          </div>
-          <div class="holo-header">
-            <span class="holo-tag">SUBJECT // ZAI</span>
-            <span class="holo-tag">CAM: 50MM F/1.4</span>
-          </div>
-          <div class="holo-image-wrapper">
-            <img src="images/profile.jpg" alt="R. Rusaith Ahamed" class="holo-portrait" />
-            <div class="holo-scanlines"></div>
-            <div class="holo-rim-glow"></div>
-          </div>
-          <div class="holo-footer">
-            <div class="holo-meta-row">
-              <span class="meta-label">ROLE:</span>
-              <span class="meta-val">CREATIVE GRAPHIC DESIGNER</span>
-            </div>
-            <div class="holo-meta-row">
-              <span class="meta-label">EXP:</span>
-              <span class="meta-val gold-text">1 YEAR DEDICATED</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Scroll Indicator -->
-    <a href="#showcase" class="scroll-cue" aria-label="Scroll to Showcase">
-      <div class="scroll-mouse-icon">
-        <span class="scroll-wheel-dot"></span>
-      </div>
-      <span class="scroll-cue-text">SCROLL TO EXPLORE</span>
-    </a>
-  </section>
-
-  <!-- ═══════════════ SPECIAL SECTION: GRAPHIC DESIGN SHOWCASE (1 YEAR EXP) ═══════════════ -->
-  <section id="showcase" class="section showcase-section">
-    <div class="section-container">
-      <div class="section-header text-center animate-on-scroll">
-        <div class="section-eyebrow">
-          <span class="highlight-cyan">// FEATURED CREATIVE SUITE</span>
-        </div>
-        <h2 class="section-title">
-          GRAPHIC DESIGN &amp; VISUAL ARTS
-        </h2>
-        <div class="experience-badge-banner">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <span>1 YEAR DEDICATED EXPERIENCE // VISUAL BRANDING, DIGITAL ART &amp; IDENTITY SYSTEMS</span>
-        </div>
-        <p class="section-lead">
-          Combining deep technical proficiency with refined visual aesthetics. Exploring typography, brand architecture, 
-          modern digital media, and 3D mockups crafted during 1 year of hands-on professional freelance practice.
-        </p>
-      </div>
-
-      <!-- 6 High-Impact 3D Graphic Design Cards Grid -->
-      <div class="showcase-grid">
-
-        <!-- Card 1: Brand Identity & Logo Architecture -->
-        <article class="design-card tilt-card animate-on-scroll delay-1">
-          <div class="card-glare"></div>
-          <div class="design-preview preview-brand">
-            <div class="preview-overlay">
-              <span class="preview-badge">IDENTITY SYSTEM</span>
-              <span class="preview-year">2023 - 2024</span>
-            </div>
-            <div class="preview-art">
-              <!-- High-end vector artwork representation -->
-              <svg viewBox="0 0 300 180" class="art-svg">
-                <defs>
-                  <linearGradient id="gradBrand" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#00f0ff" />
-                    <stop offset="50%" stop-color="#7c3aed" />
-                    <stop offset="100%" stop-color="#f59e0b" />
-                  </linearGradient>
-                </defs>
-                <circle cx="150" cy="90" r="65" stroke="url(#gradBrand)" stroke-width="2" fill="none" opacity="0.6" stroke-dasharray="6 4" />
-                <polygon points="150,45 190,115 110,115" stroke="#00f0ff" stroke-width="2.5" fill="none" />
-                <text x="150" y="100" fill="#ffffff" font-family="'Space Grotesk'" font-size="28" font-weight="700" text-anchor="middle">ZA</text>
-                <text x="150" y="145" fill="#a0aec0" font-family="'Fira Code'" font-size="10" letter-spacing="4" text-anchor="middle">BRAND ARCHITECTURE</text>
-              </svg>
-            </div>
-          </div>
-          <div class="design-info">
-            <div class="design-category">BRANDING // IDENTITY</div>
-            <h3 class="design-title">Visual Branding &amp; Corporate Identity</h3>
-            <p class="design-desc">
-              Designed comprehensive corporate brand identities, dynamic logo marks, complete typography style guides, 
-              and cohesive color systems for startups, academic organizations, and personal brands.
-            </p>
-            <div class="design-tags">
-              <span>Logo Design</span><span>Typography</span><span>Brand Guidelines</span><span>Vector Mastery</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 2: Cyber & Futuristic Poster Art -->
-        <article class="design-card tilt-card animate-on-scroll delay-2">
-          <div class="card-glare"></div>
-          <div class="design-preview preview-poster">
-            <div class="preview-overlay">
-              <span class="preview-badge">EDITORIAL &amp; POSTER</span>
-              <span class="preview-year">1 YR EXP</span>
-            </div>
-            <div class="preview-art">
-              <svg viewBox="0 0 300 180" class="art-svg">
-                <defs>
-                  <linearGradient id="gradPoster" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#f59e0b" />
-                    <stop offset="100%" stop-color="#ef4444" />
-                  </linearGradient>
-                </defs>
-                <rect x="50" y="25" width="200" height="130" stroke="url(#gradPoster)" stroke-width="1.5" fill="none" opacity="0.7"/>
-                <line x1="50" y1="50" x2="250" y2="50" stroke="#f59e0b" stroke-width="1" opacity="0.4"/>
-                <text x="65" y="42" fill="#f59e0b" font-family="'Fira Code'" font-size="11" letter-spacing="2">NEO-TOKYO // EDITION 01</text>
-                <text x="65" y="85" fill="#ffffff" font-family="'Space Grotesk'" font-size="24" font-weight="800">FUTURE SHOCK</text>
-                <text x="65" y="105" fill="#00f0ff" font-family="'Inter'" font-size="12">GRAPHIC VISUAL SYNTHESIS</text>
-                <circle cx="220" cy="115" r="22" fill="#ef4444" opacity="0.8" />
-              </svg>
-            </div>
-          </div>
-          <div class="design-info">
-            <div class="design-category">POSTERS // EDITORIAL</div>
-            <h3 class="design-title">Cinematic Key Visuals &amp; Event Posters</h3>
-            <p class="design-desc">
-              High-impact editorial layouts and promotional event key visuals combining bold typography hierarchies, 
-              constructivist grids, and striking duotone color grading.
-            </p>
-            <div class="design-tags">
-              <span>Photoshop</span><span>Illustrator</span><span>Color Grading</span><span>Grid Systems</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 3: Modern UI/UX & Spatial Web Concepts -->
-        <article class="design-card tilt-card animate-on-scroll delay-3">
-          <div class="card-glare"></div>
-          <div class="design-preview preview-ui">
-            <div class="preview-overlay">
-              <span class="preview-badge">UI/UX &amp; PRODUCT</span>
-              <span class="preview-year">PORTFOLIO</span>
-            </div>
-            <div class="preview-art">
-              <svg viewBox="0 0 300 180" class="art-svg">
-                <rect x="30" y="25" width="240" height="130" rx="10" fill="#0c1020" stroke="#38bdf8" stroke-width="1.5" />
-                <circle cx="48" cy="40" r="4" fill="#ef4444" />
-                <circle cx="62" cy="40" r="4" fill="#f59e0b" />
-                <circle cx="76" cy="40" r="4" fill="#10b981" />
-                <rect x="45" y="58" width="60" height="35" rx="4" fill="#1e293b" />
-                <rect x="115" y="58" width="140" height="35" rx="4" fill="#1e293b" />
-                <rect x="45" y="102" width="210" height="40" rx="4" fill="#131c31" stroke="#00f0ff" stroke-width="0.75" />
-                <line x1="55" y1="122" x2="160" y2="122" stroke="#00f0ff" stroke-width="2" />
-              </svg>
-            </div>
-          </div>
-          <div class="design-info">
-            <div class="design-category">UI / UX // SPATIAL INTERFACES</div>
-            <h3 class="design-title">High-Fidelity Interface Systems</h3>
-            <p class="design-desc">
-              Prototyped elegant dark-mode web interfaces, interactive dashboards, and design component systems 
-              with attention to spatial depth, micro-interactions, and glassmorphic elevations.
-            </p>
-            <div class="design-tags">
-              <span>Figma</span><span>Design Systems</span><span>Wireframing</span><span>Interactive Prototyping</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 4: Social Media Campaigns & Digital Advertising -->
-        <article class="design-card tilt-card animate-on-scroll delay-1">
-          <div class="card-glare"></div>
-          <div class="design-preview preview-social">
-            <div class="preview-overlay">
-              <span class="preview-badge">DIGITAL MARKETING</span>
-              <span class="preview-year">HIGH REACH</span>
-            </div>
-            <div class="preview-art">
-              <svg viewBox="0 0 300 180" class="art-svg">
-                <rect x="75" y="20" width="150" height="140" rx="8" fill="#161828" stroke="#a855f7" stroke-width="1.5" />
-                <circle cx="150" cy="65" r="28" fill="#a855f7" opacity="0.3" stroke="#a855f7" stroke-width="2" />
-                <path d="M142 55 L162 65 L142 75 Z" fill="#00f0ff" />
-                <rect x="95" y="108" width="110" height="8" rx="4" fill="#cbd5e1" />
-                <rect x="110" y="124" width="80" height="6" rx="3" fill="#64748b" />
-              </svg>
-            </div>
-          </div>
-          <div class="design-info">
-            <div class="design-category">SOCIAL MEDIA // ADVERTISING</div>
-            <h3 class="design-title">Social Campaign Assets &amp; Banners</h3>
-            <p class="design-desc">
-              Formulated high-conversion promotional creatives, Instagram carousel graphics, YouTube key art, and 
-              Facebook ad banners tailored to amplify brand engagement and click-through rates.
-            </p>
-            <div class="design-tags">
-              <span>Ad Creatives</span><span>Carousel Sets</span><span>Thumbnails</span><span>Visual Strategy</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 5: Vector Art & Custom Iconography -->
-        <article class="design-card tilt-card animate-on-scroll delay-2">
-          <div class="card-glare"></div>
-          <div class="design-preview preview-vector">
-            <div class="preview-overlay">
-              <span class="preview-badge">VECTOR ART</span>
-              <span class="preview-year">PRECISION</span>
-            </div>
-            <div class="preview-art">
-              <svg viewBox="0 0 300 180" class="art-svg">
-                <polygon points="150,25 210,60 210,125 150,160 90,125 90,60" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.8" />
-                <polygon points="150,45 190,70 190,115 150,140 110,115 110,70" stroke="#00f0ff" stroke-width="1.5" fill="none" />
-                <circle cx="150" cy="92.5" r="14" fill="#00ff88" opacity="0.4" />
-                <circle cx="150" cy="92.5" r="5" fill="#ffffff" />
-              </svg>
-            </div>
-          </div>
-          <div class="design-info">
-            <div class="design-category">VECTOR // ICONOGRAPHY</div>
-            <h3 class="design-title">Geometric Vector Suites &amp; Emblems</h3>
-            <p class="design-desc">
-              Constructed mathematically precise vector emblems, custom iconography collections, and scalable badge 
-              insignias engineered for flawless rendering from 16px favicons to billboard sizes.
-            </p>
-            <div class="design-tags">
-              <span>SVG Mastering</span><span>Geometry</span><span>Custom Icons</span><span>Badge Design</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 6: 3D Product & Packaging Mockups -->
-        <article class="design-card tilt-card animate-on-scroll delay-3">
-          <div class="card-glare"></div>
-          <div class="design-preview preview-mockup">
-            <div class="preview-overlay">
-              <span class="preview-badge">3D MOCKUPS</span>
-              <span class="preview-year">REALISTIC</span>
-            </div>
-            <div class="preview-art">
-              <svg viewBox="0 0 300 180" class="art-svg">
-                <!-- Isometric 3D box presentation -->
-                <polygon points="150,30 215,65 150,100 85,65" fill="#38bdf8" opacity="0.8" />
-                <polygon points="85,65 150,100 150,160 85,125" fill="#0284c7" />
-                <polygon points="215,65 150,100 150,160 215,125" fill="#0369a1" />
-                <line x1="150" y1="100" x2="150" y2="160" stroke="#ffffff" stroke-width="1.5" opacity="0.6" />
-                <text x="150" y="55" fill="#ffffff" font-family="'Space Grotesk'" font-size="12" font-weight="700" text-anchor="middle">ZAI 3D</text>
-              </svg>
-            </div>
-          </div>
-          <div class="design-info">
-            <div class="design-category">3D // PACKAGING</div>
-            <h3 class="design-title">Photorealistic Product &amp; Packaging Mockups</h3>
-            <p class="design-desc">
-              Rendered lifelike physical product mockups, stationary suites, and spatial packaging layouts with 
-              cinematic studio lighting, realistic reflections, and tactile surface textures.
-            </p>
-            <div class="design-tags">
-              <span>3D Mockups</span><span>Studio Lighting</span><span>Packaging</span><span>Realistic Shading</span>
-            </div>
-          </div>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════ ABOUT SECTION: PROFILE & METRICS ═══════════════ -->
-  <section id="about" class="section about-section">
-    <div class="section-container">
-      <div class="about-grid">
-
-        <!-- Left: Full-Body Cinematic Presentation -->
-        <div class="about-visual animate-on-scroll">
-          <div class="about-frame-card tilt-card">
-            <div class="card-glare"></div>
-            <div class="frame-hud-bar">
-              <span class="hud-pill">DOSSIER // R. RUSAITH AHAMED</span>
-              <span class="hud-code">ID: ZA-2024</span>
-            </div>
-            <div class="about-image-container">
-              <img src="images/profile-full.jpg" alt="R. Rusaith Ahamed Full Portrait" class="about-photo" />
-              <div class="about-photo-vignette"></div>
-            </div>
-            <div class="frame-hud-footer">
-              <div class="hud-data-col">
-                <span class="hud-k">LOCATION</span>
-                <span class="hud-v">KINNIYA, SRI LANKA</span>
-              </div>
-              <div class="hud-data-col">
-                <span class="hud-k">STATUS</span>
-                <span class="hud-v cyan-text">AVAILABLE FOR HIRE</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right: Biography & Verified Metrics -->
-        <div class="about-content animate-on-scroll delay-1">
-          <div class="section-eyebrow">
-            <span class="highlight-cyan">// ABOUT THE CREATOR</span>
-          </div>
-          <h2 class="section-title">
-            BRIDGING CREATIVE VISION WITH TECHNICAL MASTERY
-          </h2>
-
-          <p class="about-paragraph">
-            I am a motivated IT enthusiast, <strong>professional Graphic Designer (1 Year Experience)</strong>, and 
-            creative technologist with extensive hands-on experience spanning IT infrastructure management, network 
-            diagnostics, digital branding, and full-stack software development.
-          </p>
-
-          <p class="about-paragraph">
-            Whether architecting scalable web platforms like <em>Zai Education</em>, training autonomous custom AI models 
-            like <em>Zai Neo</em>, directing full ICT lab operations for 3+ years, or crafting visual branding systems for 
-            clients, I approach every challenge with meticulous attention to detail, analytical rigor, and aesthetic excellence.
-          </p>
-
-          <!-- Core Personal Info Grid -->
-          <div class="bio-spec-grid">
-            <div class="bio-spec-item">
-              <span class="spec-label">FULL NAME</span>
-              <span class="spec-value">R. Rusaith Ahamed</span>
-            </div>
-            <div class="bio-spec-item">
-              <span class="spec-label">CALLSIGN / NICKNAME</span>
-              <span class="spec-value highlight-cyan">Zai</span>
-            </div>
-            <div class="bio-spec-item">
-              <span class="spec-label">PRIMARY DISCIPLINE</span>
-              <span class="spec-value">Graphic Design (1 Yr) &amp; Web Dev</span>
-            </div>
-            <div class="bio-spec-item">
-              <span class="spec-label">COORDINATES</span>
-              <span class="spec-value">Poovarasantheevu, Kinniya - 05</span>
-            </div>
-            <div class="bio-spec-item">
-              <span class="spec-label">LANGUAGES</span>
-              <span class="spec-value">Tamil (Native), English (Proficient)</span>
-            </div>
-            <div class="bio-spec-item">
-              <span class="spec-label">COMMUNICATION</span>
-              <span class="spec-value">ruzaith2007@icloud.com</span>
-            </div>
-          </div>
-
-          <!-- Verified Stats Counter Matrix -->
-          <div class="stats-matrix">
-            <div class="stat-card">
-              <div class="stat-number" data-count="3">0</div>
-              <div class="stat-label">YEARS ICT &amp; LAB HEAD</div>
-            </div>
-            <div class="stat-card highlight-border-gold">
-              <div class="stat-number gold-text" data-count="1">0</div>
-              <div class="stat-label">YEAR GRAPHIC DESIGN</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number cyan-text" data-count="50">0</div>
-              <div class="stat-label">VERIFIED CREDENTIALS</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number" data-count="10">0</div>
-              <div class="stat-label">PRODUCTION PROJECTS</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════ EXPERIENCE TIMELINE SECTION ═══════════════ -->
-  <section id="experience" class="section experience-section">
-    <div class="section-container">
-      <div class="section-header text-center animate-on-scroll">
-        <div class="section-eyebrow">
-          <span class="highlight-cyan">// CAREER &amp; TRACK RECORD</span>
-        </div>
-        <h2 class="section-title">PROFESSIONAL JOURNEY</h2>
-        <p class="section-lead">
-          A proven trajectory across creative design studios, high-pressure educational ICT lab handling, 
-          software engineering, and digital infrastructure operations.
-        </p>
-      </div>
-
-      <!-- Vertical Timeline -->
-      <div class="cinematic-timeline">
-
-        <!-- Role 1: Graphic Designer (1 Year) [HIGHLIGHTED] -->
-        <div class="timeline-row highlight-role animate-on-scroll">
-          <div class="timeline-meta">
-            <span class="timeline-period gold-text">1 YEAR DEDICATED</span>
-            <span class="timeline-role-type">CREATIVE &amp; VISUAL ARTS</span>
-          </div>
-          <div class="timeline-center">
-            <div class="timeline-orb gold-orb">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            </div>
-            <div class="timeline-line"></div>
-          </div>
-          <div class="timeline-card tilt-card gold-border">
-            <div class="card-glare"></div>
-            <div class="card-badge gold-badge">SPECIALIZED FOCUS</div>
-            <h3 class="role-title">Graphic Designer</h3>
-            <p class="role-org">Freelance &amp; Creative Media Practice</p>
-            <p class="role-desc">
-              Spearheaded visual branding, logo identity systems, and digital promotional content for 1 dedicated year. 
-              Produced marketing assets, high-engagement social media campaigns, event key art, and print publication materials 
-              using advanced digital graphic design workflows.
-            </p>
-            <div class="role-skills">
-              <span>Visual Branding</span><span>Logo Design</span><span>Digital Media Production</span><span>Marketing Creatives</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Role 2: ICT Lab Head (3+ Years) -->
-        <div class="timeline-row animate-on-scroll delay-1">
-          <div class="timeline-meta">
-            <span class="timeline-period">3+ YEARS</span>
-            <span class="timeline-role-type">MANAGEMENT &amp; INFRASTRUCTURE</span>
-          </div>
-          <div class="timeline-center">
-            <div class="timeline-orb cyan-orb">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-            </div>
-            <div class="timeline-line"></div>
-          </div>
-          <div class="timeline-card tilt-card">
-            <div class="card-glare"></div>
-            <h3 class="role-title">ICT Lab Head</h3>
-            <p class="role-org">T/Kin/Al-Mina Maha Vidyalaya</p>
-            <p class="role-desc">
-              Directly responsible for orchestrating the school’s core computer lab facilities. Directed hardware repairs, 
-              preventive operating system maintenance, network connectivity, and overall lab security for faculty and students.
-            </p>
-            <div class="role-skills">
-              <span>Lab Handling</span><span>Hardware Diagnostics</span><span>System Maintenance</span><span>Inventory</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Role 3: Computer Operator & ICT Support (3+ Years) -->
-        <div class="timeline-row animate-on-scroll delay-2">
-          <div class="timeline-meta">
-            <span class="timeline-period">3+ YEARS</span>
-            <span class="timeline-role-type">OPERATIONS &amp; DOCUMENTATION</span>
-          </div>
-          <div class="timeline-center">
-            <div class="timeline-orb">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            </div>
-            <div class="timeline-line"></div>
-          </div>
-          <div class="timeline-card tilt-card">
-            <div class="card-glare"></div>
-            <h3 class="role-title">Computer Operator &amp; ICT Support</h3>
-            <p class="role-org">T/Kin/Al-Mina Maha Vidyalaya</p>
-            <p class="role-desc">
-              Supervised exam paper typing, high-volume secure printing, official document preparation, and academic record systems. 
-              Provided real-time technical troubleshooting across institutional departments.
-            </p>
-            <div class="role-skills">
-              <span>Exam Paper Preparation</span><span>Document Formatting</span><span>Data Security</span><span>Technical Support</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Role 4: Web Designer & Developer (1+ Year) -->
-        <div class="timeline-row animate-on-scroll delay-1">
-          <div class="timeline-meta">
-            <span class="timeline-period">1+ YEAR</span>
-            <span class="timeline-role-type">SOFTWARE &amp; WEB PLATFORMS</span>
-          </div>
-          <div class="timeline-center">
-            <div class="timeline-orb cyan-orb">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-            </div>
-            <div class="timeline-line"></div>
-          </div>
-          <div class="timeline-card tilt-card">
-            <div class="card-glare"></div>
-            <h3 class="role-title">Web Designer &amp; Developer</h3>
-            <p class="role-org">"Zai Education" Web Platform</p>
-            <p class="role-desc">
-              Envisioned, architected, and built the official "Zai Education" interactive online portal. Designed intuitive 
-              learning interfaces, optimized mobile responsiveness, and implemented modern web frontends.
-            </p>
-            <div class="role-skills">
-              <span>Full-Stack Web</span><span>UI/UX Architecture</span><span>JavaScript / HTML / CSS</span><span>Responsive Design</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Role 5: AI Trainer & Developer (1+ Year) -->
-        <div class="timeline-row animate-on-scroll delay-2">
-          <div class="timeline-meta">
-            <span class="timeline-period">1+ YEAR</span>
-            <span class="timeline-role-type">ARTIFICIAL INTELLIGENCE</span>
-          </div>
-          <div class="timeline-center">
-            <div class="timeline-orb violet-orb">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            </div>
-            <div class="timeline-line"></div>
-          </div>
-          <div class="timeline-card tilt-card">
-            <div class="card-glare"></div>
-            <h3 class="role-title">AI Trainer &amp; Developer</h3>
-            <p class="role-org">"Zai Neo" Intelligent Agent Project</p>
-            <p class="role-desc">
-              Conceptualized, configured, and fine-tuned a custom domain-specific artificial intelligence model dubbed "Zai Neo". 
-              Trained datasets, calibrated response logic, and integrated neural workflows.
-            </p>
-            <div class="role-skills">
-              <span>Model Tuning</span><span>Prompt Engineering</span><span>Dataset Preparation</span><span>Neural Workflows</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Role 6: Network Technician & Support Specialist (1+ Year) -->
-        <div class="timeline-row animate-on-scroll delay-1">
-          <div class="timeline-meta">
-            <span class="timeline-period">1+ YEAR</span>
-            <span class="timeline-role-type">NETWORKING &amp; HARDWARE</span>
-          </div>
-          <div class="timeline-center">
-            <div class="timeline-orb cyan-orb">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            </div>
-            <div class="timeline-line"></div>
-          </div>
-          <div class="timeline-card tilt-card">
-            <div class="card-glare"></div>
-            <h3 class="role-title">Network Technician &amp; Support Specialist</h3>
-            <p class="role-org">Infrastructure Operations</p>
-            <p class="role-desc">
-              Diagnosed network connectivity bottlenecks, deployed structured ethernet and Wi-Fi routing, crimped RJ45 patch cables, 
-              and safeguarded system network uptime.
-            </p>
-            <div class="role-skills">
-              <span>Structured Cabling</span><span>LAN / WAN Routing</span><span>Switch Config</span><span>Fault Isolation</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Role 7: MS Office Operator (5+ Years) -->
-        <div class="timeline-row animate-on-scroll delay-2">
-          <div class="timeline-meta">
-            <span class="timeline-period">5+ YEARS</span>
-            <span class="timeline-role-type">DATA ARCHITECTURE &amp; SUITE</span>
-          </div>
-          <div class="timeline-center">
-            <div class="timeline-orb">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            </div>
-            <div class="timeline-line"></div>
-          </div>
-          <div class="timeline-card tilt-card">
-            <div class="card-glare"></div>
-            <h3 class="role-title">MS Office Operator</h3>
-            <p class="role-org">Professional Documentation Practice</p>
-            <p class="role-desc">
-              Over 5 years of master-level proficiency in Microsoft Word, Excel, and PowerPoint. Automated spreadsheet calculations, 
-              designed complex document templates, and built formatted reporting workflows.
-            </p>
-            <div class="role-skills">
-              <span>Advanced Excel Formulas</span><span>Word Layouts</span><span>Data Presentation</span><span>Document Auditing</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Role 8: Assistant Electrician (1 Year) -->
-        <div class="timeline-row animate-on-scroll delay-1">
-          <div class="timeline-meta">
-            <span class="timeline-period">1 YEAR</span>
-            <span class="timeline-role-type">HARDWARE &amp; ELECTRICAL</span>
-          </div>
-          <div class="timeline-center">
-            <div class="timeline-orb">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            </div>
-          </div>
-          <div class="timeline-card tilt-card">
-            <div class="card-glare"></div>
-            <h3 class="role-title">Assistant Electrician</h3>
-            <p class="role-org">Technical Services</p>
-            <p class="role-desc">
-              Provided critical hands-on wiring support, electrical system installations, circuit breaker maintenance, and safely 
-              managed equipment power supplies.
-            </p>
-            <div class="role-skills">
-              <span>Electrical Wiring</span><span>Circuit Support</span><span>Power Distribution</span><span>Safety Protocols</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════ SKILLS MATRIX SECTION ═══════════════ -->
-  <section id="skills" class="section skills-section">
-    <div class="section-container">
-      <div class="section-header text-center animate-on-scroll">
-        <div class="section-eyebrow">
-          <span class="highlight-cyan">// CORE COMPETENCY MATRIX</span>
-        </div>
-        <h2 class="section-title">TECHNICAL &amp; CREATIVE PROFICIENCY</h2>
-        <p class="section-lead">
-          Verified skills evaluated across design production, computing systems, software development, and leadership.
-        </p>
-      </div>
-
-      <!-- Skills Circular Gauges Grid -->
-      <div class="skills-grid">
-
-        <!-- Skill 1: Graphic Design (Special Focus) -->
-        <div class="skill-card tilt-card highlight-card-gold animate-on-scroll delay-1">
-          <div class="card-glare"></div>
-          <div class="skill-circle" data-percentage="92">
-            <svg class="progress-ring" width="130" height="130">
-              <circle class="progress-ring-bg" cx="65" cy="65" r="54" />
-              <circle class="progress-ring-circle gold-stroke" cx="65" cy="65" r="54" />
-            </svg>
-            <span class="skill-percentage gold-text">92%</span>
-          </div>
-          <h3 class="skill-name">Graphic Design</h3>
-          <p class="skill-desc">Visual Branding, Identity &amp; Digital Art (1 Year Exp)</p>
-        </div>
-
-        <!-- Skill 2: ICT System Management & Lab Handling -->
-        <div class="skill-card tilt-card animate-on-scroll delay-2">
-          <div class="card-glare"></div>
-          <div class="skill-circle" data-percentage="95">
-            <svg class="progress-ring" width="130" height="130">
-              <circle class="progress-ring-bg" cx="65" cy="65" r="54" />
-              <circle class="progress-ring-circle cyan-stroke" cx="65" cy="65" r="54" />
-            </svg>
-            <span class="skill-percentage cyan-text">95%</span>
-          </div>
-          <h3 class="skill-name">ICT Lab Handling</h3>
-          <p class="skill-desc">Hardware Diagnostics, Maintenance &amp; Operations</p>
-        </div>
-
-        <!-- Skill 3: MS Office Suite Proficiency -->
-        <div class="skill-card tilt-card animate-on-scroll delay-3">
-          <div class="card-glare"></div>
-          <div class="skill-circle" data-percentage="96">
-            <svg class="progress-ring" width="130" height="130">
-              <circle class="progress-ring-bg" cx="65" cy="65" r="54" />
-              <circle class="progress-ring-circle" cx="65" cy="65" r="54" />
-            </svg>
-            <span class="skill-percentage">96%</span>
-          </div>
-          <h3 class="skill-name">MS Office Operator</h3>
-          <p class="skill-desc">Word, Excel Formulas &amp; Document Preparation (5+ Yrs)</p>
-        </div>
-
-        <!-- Skill 4: Web Designing & Modern Development -->
-        <div class="skill-card tilt-card animate-on-scroll delay-1">
-          <div class="card-glare"></div>
-          <div class="skill-circle" data-percentage="88">
-            <svg class="progress-ring" width="130" height="130">
-              <circle class="progress-ring-bg" cx="65" cy="65" r="54" />
-              <circle class="progress-ring-circle cyan-stroke" cx="65" cy="65" r="54" />
-            </svg>
-            <span class="skill-percentage cyan-text">88%</span>
-          </div>
-          <h3 class="skill-name">Web Development</h3>
-          <p class="skill-desc">HTML5, CSS3, JavaScript &amp; AI-Assisted Architecture</p>
-        </div>
-
-        <!-- Skill 5: AI Model Training & Workflows -->
-        <div class="skill-card tilt-card animate-on-scroll delay-2">
-          <div class="card-glare"></div>
-          <div class="skill-circle" data-percentage="82">
-            <svg class="progress-ring" width="130" height="130">
-              <circle class="progress-ring-bg" cx="65" cy="65" r="54" />
-              <circle class="progress-ring-circle violet-stroke" cx="65" cy="65" r="54" />
-            </svg>
-            <span class="skill-percentage violet-text">82%</span>
-          </div>
-          <h3 class="skill-name">AI &amp; Neural Systems</h3>
-          <p class="skill-desc">Custom AI Training (Zai Neo), Prompt Engineering</p>
-        </div>
-
-        <!-- Skill 6: Network Infrastructure & Cabling -->
-        <div class="skill-card tilt-card animate-on-scroll delay-3">
-          <div class="card-glare"></div>
-          <div class="skill-circle" data-percentage="86">
-            <svg class="progress-ring" width="130" height="130">
-              <circle class="progress-ring-bg" cx="65" cy="65" r="54" />
-              <circle class="progress-ring-circle cyan-stroke" cx="65" cy="65" r="54" />
-            </svg>
-            <span class="skill-percentage cyan-text">86%</span>
-          </div>
-          <h3 class="skill-name">Network Specialist</h3>
-          <p class="skill-desc">Structured Cabling, Troubleshooting &amp; Uptime</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════ EDUCATION & CERTIFICATIONS ═══════════════ -->
-  <section id="education" class="section education-section">
-    <div class="section-container">
-      <div class="section-header text-center animate-on-scroll">
-        <div class="section-eyebrow">
-          <span class="highlight-cyan">// ACADEMIC &amp; CREDENTIAL AUDIT</span>
-        </div>
-        <h2 class="section-title">EDUCATION &amp; CERTIFICATIONS</h2>
-        <p class="section-lead">
-          Formal academic training supplemented by verified industry certifications.
-        </p>
-      </div>
-
-      <div class="edu-cert-split">
-
-        <!-- Left: Academic Degrees -->
-        <div class="edu-column animate-on-scroll">
-          <h3 class="subsection-title">ACADEMIC FOUNDATION</h3>
-
-          <!-- Card 1: GCE Advanced Level -->
-          <div class="education-card tilt-card highlight-border">
-            <div class="card-glare"></div>
-            <div class="edu-status-pill ongoing-pill">ONGOING // EXPECTED 2026</div>
-            <h4 class="edu-degree">GCE Advanced Level (Arts Stream)</h4>
-            <p class="edu-institution">T/Kin/Al-Mina Maha Vidyalaya</p>
-            <div class="edu-subjects">
-              <span class="subject-chip">Information &amp; Communication Technology (ICT)</span>
-              <span class="subject-chip">Media Studies</span>
-              <span class="subject-chip">Geography</span>
-            </div>
-          </div>
-
-          <!-- Card 2: GCE Ordinary Level -->
-          <div class="education-card tilt-card">
-            <div class="card-glare"></div>
-            <div class="edu-status-pill completed-pill">COMPLETED // 2024 (2025)</div>
-            <h4 class="edu-degree">GCE Ordinary Level</h4>
-            <p class="edu-institution">T/Kin/Al-Mina Maha Vidyalaya</p>
-            <div class="result-badge-list">
-              <span class="grade-badge grade-a">2 A Grades</span>
-              <span class="grade-badge grade-b">3 B Grades</span>
-              <span class="grade-badge grade-c">4 C Grades</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right: Professional Certifications -->
-        <div class="cert-column animate-on-scroll delay-1">
-          <h3 class="subsection-title">VERIFIED CERTIFICATIONS (50+ CREDENTIALS)</h3>
-
-          <div class="cert-grid">
-
-            <div class="cert-card tilt-card">
-              <div class="card-glare"></div>
-              <div class="cert-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              </div>
-              <div class="cert-info">
-                <h4 class="cert-title">Cybersecurity &amp; Ethical Hacking</h4>
-                <p class="cert-issuer">Capricioase University</p>
-                <span class="cert-meta">Certificate of Completion // Security Audit</span>
-              </div>
-            </div>
-
-            <div class="cert-card tilt-card">
-              <div class="card-glare"></div>
-              <div class="cert-icon gold-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="6" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="18"/></svg>
-              </div>
-              <div class="cert-info">
-                <h4 class="cert-title">Cryptocurrency &amp; Blockchain Systems</h4>
-                <p class="cert-issuer">Coin Trade Academy</p>
-                <span class="cert-meta">Participation &amp; Technical Architecture</span>
-              </div>
-            </div>
-
-            <div class="cert-card tilt-card">
-              <div class="card-glare"></div>
-              <div class="cert-icon cyan-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-              </div>
-              <div class="cert-info">
-                <h4 class="cert-title">Web Design &amp; School Website Development</h4>
-                <p class="cert-issuer">LK Domain Registry (.LK)</p>
-                <span class="cert-meta">Official Seminar Certification // Web Deployment</span>
-              </div>
-            </div>
-
-            <div class="cert-card tilt-card">
-              <div class="card-glare"></div>
-              <div class="cert-icon violet-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              </div>
-              <div class="cert-info">
-                <h4 class="cert-title">50+ ICT, Technical &amp; Academic Honors</h4>
-                <p class="cert-issuer">Multiple Institutional Bodies</p>
-                <span class="cert-meta">Full Verification Dossier Available on Request</span>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════ CINEMATIC CONTACT TERMINAL ═══════════════ -->
-  <section id="contact" class="section contact-section">
-    <div class="section-container">
-      <div class="section-header text-center animate-on-scroll">
-        <div class="section-eyebrow">
-          <span class="highlight-cyan">// INITIATE SECURE TRANSMISSION</span>
-        </div>
-        <h2 class="section-title">CONNECT WITH ZAI</h2>
-        <p class="section-lead">
-          Available for freelance graphic design, visual branding contracts, web engineering, and technical consultations.
-        </p>
-      </div>
-
-      <div class="contact-grid">
-
-        <!-- Left: Transmission Channels -->
-        <div class="contact-info-panel animate-on-scroll">
-          <div class="panel-header">
-            <span class="panel-tag">// DIRECT COORDINATES</span>
-          </div>
-
-          <a href="tel:+94750761016" class="contact-channel-item">
-            <div class="channel-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            </div>
-            <div class="channel-details">
-              <span class="channel-label">TELEPHONE / WHATSAPP</span>
-              <span class="channel-value">+94 75 076 1016</span>
-            </div>
-          </a>
-
-          <a href="mailto:ruzaith2007@icloud.com" class="contact-channel-item">
-            <div class="channel-icon cyan-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            </div>
-            <div class="channel-details">
-              <span class="channel-label">DIRECT EMAIL</span>
-              <span class="channel-value">ruzaith2007@icloud.com</span>
-            </div>
-          </a>
-
-          <div class="contact-channel-item">
-            <div class="channel-icon gold-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            </div>
-            <div class="channel-details">
-              <span class="channel-label">PHYSICAL LOCATION</span>
-              <span class="channel-value">Poovarasantheevu, Kinniya - 05, Sri Lanka</span>
-            </div>
-          </div>
-
-          <a href="https://zaieduhub.github.io" target="_blank" rel="noopener noreferrer" class="contact-channel-item">
-            <div class="channel-icon violet-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            </div>
-            <div class="channel-details">
-              <span class="channel-label">GITHUB DOMAIN</span>
-              <span class="channel-value">zaieduhub.github.io</span>
-            </div>
-          </a>
-        </div>
-
-        <!-- Right: Interactive Cyber Form -->
-        <div class="contact-form-panel animate-on-scroll delay-1">
-          <form id="contact-form" class="cyber-form">
-            <div class="form-header">
-              <span class="form-title">ENCRYPTED MESSAGE DISPATCH</span>
-              <span class="form-status">STATUS: ONLINE</span>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="form-name">YOUR IDENTITY / FULL NAME *</label>
-                <input type="text" id="form-name" required placeholder="e.g. Elena Vance" />
-              </div>
-              <div class="form-group">
-                <label for="form-email">ELECTRONIC MAIL *</label>
-                <input type="email" id="form-email" required placeholder="e.g. elena@domain.com" />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="form-subject">SUBJECT / PROJECT INQUIRY</label>
-              <input type="text" id="form-subject" placeholder="e.g. Graphic Design Brand Package / Web 3D Project" />
-            </div>
-
-            <div class="form-group">
-              <label for="form-message">TRANSMISSION CONTENT *</label>
-              <textarea id="form-message" rows="5" required placeholder="Describe your vision, scope, timelines, or specifications..."></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary submit-btn">
-              <span>DISPATCH TRANSMISSION</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            </button>
-          </form>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════ CINEMATIC FOOTER ═══════════════ -->
-  <footer class="footer">
-    <div class="footer-container">
-      <div class="footer-top">
-        <div class="footer-brand">
-          <div class="brand-monogram">
-            <span class="mono-z">Z</span><span class="mono-ai">AI</span>
-          </div>
-          <span class="footer-tagline">3D CINEMATIC PORTFOLIO // R. RUSAITH AHAMED</span>
-        </div>
-        <div class="footer-socials">
-          <a href="https://github.com/zaieduhub" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-          </a>
-          <a href="mailto:ruzaith2007@icloud.com" aria-label="Email">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p class="copyright">
-          &copy; 2024 R. RUSAITH AHAMED. ALL RIGHTS RESERVED. // DESIGNED WITH THREE.JS &amp; WEBGL
-        </p>
-        <span class="footer-coords">LAT: 08&deg;34'N // LON: 81&deg;13'E</span>
-      </div>
-    </div>
-  </footer>
+    </main>
+  </div>
+
+  <!-- =========================================================
+       THREE.JS WEBGL IMPLEMENTATION
+       ========================================================= -->
+  <script type="module">
+    import * as THREE from 'three';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    // ---------------------------------------------------------
+    // 1. SETUP: SCENE, PERSPECTIVE CAMERA & ACES FILMIC RENDERER
+    // ---------------------------------------------------------
+    const canvas = document.getElementById('webgl-canvas');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x050507);
+
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+
+    // Perspective camera, fov 30°, placed so 1 world unit = 1 CSS px at z = 0
+    const FOV = 30;
+    const camera = new THREE.PerspectiveCamera(FOV, W / H, 0.1, 8000);
+
+    function updateCameraDistance() {
+      // visible_height = 2 * Cz * tan(15 deg) = H
+      const rad = THREE.MathUtils.degToRad(FOV / 2);
+      const Cz = (H / 2) / Math.tan(rad);
+      camera.position.set(0, 0, Cz);
+      camera.lookAt(0, 0, 0);
+    }
+    updateCameraDistance();
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+      powerPreference: 'high-performance',
+      alpha: false
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(W, H);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+
+    // PMREM RoomEnvironment with environmentIntensity 0.42
+    const pmremGen = new THREE.PMREMGenerator(renderer);
+    pmremGen.compileEquirectangularShader();
+    const roomEnv = new RoomEnvironment();
+    scene.environment = pmremGen.fromScene(roomEnv).texture;
+    scene.environmentIntensity = 0.42;
+
+    // Soft white-blue key light from top-left
+    const keyLight = new THREE.DirectionalLight(0xd4e4ff, 1.4);
+    keyLight.position.set(-W * 0.5, H * 0.7, 500);
+    scene.add(keyLight);
+
+    const ambientLight = new THREE.AmbientLight(0x0f1118, 0.6);
+    scene.add(ambientLight);
+
+    // ---------------------------------------------------------
+    // 2. DIMENSIONS, LAYOUT SCALE & ROOT BLOCK GROUP
+    // ---------------------------------------------------------
+    let S = 1.0;
+    let blockWidth = 0;
+    let blockHeight = 0;
+    let navHeight = 0;
+    let gap = 14;
+    let panelWidth = 0;
+    let panelHeight = 0;
+    let isPortrait = false;
+
+    // Root block group containing nav slab and shard panel
+    const blockGroup = new THREE.Group();
+    scene.add(blockGroup);
+
+    function computeDimensions() {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      isPortrait = H > W;
+
+      const isMobile = W < 600;
+      const marginSide = isMobile ? 16 : W * 0.055;
+      const marginTopBottom = isMobile ? 16 : H * 0.085;
+
+      blockWidth = W - 2 * marginSide;
+      blockHeight = H - 2 * marginTopBottom;
+      S = blockWidth / 1730;
+
+      gap = 14 * S;
+      navHeight = blockHeight * 0.108;
+      panelHeight = blockHeight - navHeight - gap;
+      panelWidth = blockWidth;
+    }
+    computeDimensions();
+
+    // ---------------------------------------------------------
+    // 3. CURSOR GLOW SHADER HOOK FOR SMOKED-GLASS MATERIAL
+    // ---------------------------------------------------------
+    const pointerWorldPos = new THREE.Vector3(0, 0, 0);
+    let pointerGlowStrength = { value: 0.0 };
+
+    function createGlassMaterial(options = {}) {
+      const mat = new THREE.MeshPhysicalMaterial({
+        color: 0x17171b,
+        roughness: 0.36,
+        clearcoat: 0.7,
+        clearcoatRoughness: 0.12,
+        specularIntensity: 0.7,
+        iridescence: options.iridescence !== undefined ? options.iridescence : 0.55,
+        iridescenceIOR: 1.3,
+        iridescenceThicknessRange: [250, 650],
+        envMapIntensity: 1.0,
+      });
+
+      if (!options.noCursorGlow) {
+        mat.userData.uniforms = {
+          uPointerWorldPos: { value: pointerWorldPos },
+          uPointerGlowStrength: pointerGlowStrength,
+          uScale: { value: S }
+        };
+
+        mat.onBeforeCompile = (shader) => {
+          shader.uniforms.uPointerWorldPos = mat.userData.uniforms.uPointerWorldPos;
+          shader.uniforms.uPointerGlowStrength = mat.userData.uniforms.uPointerGlowStrength;
+          shader.uniforms.uScale = mat.userData.uniforms.uScale;
+
+          // Inject vWorldPosition into vertex shader
+          shader.vertexShader = `
+            varying vec3 vWorldPosition;
+            ${shader.vertexShader}
+          `.replace(
+            '#include <worldpos_vertex>',
+            `
+            #include <worldpos_vertex>
+            vWorldPosition = (modelMatrix * vec4(transformed, 1.0)).xyz;
+            `
+          );
+
+          // Inject lavender emission into fragment shader
+          shader.fragmentShader = `
+            uniform vec3 uPointerWorldPos;
+            uniform float uPointerGlowStrength;
+            uniform float uScale;
+            varying vec3 vWorldPosition;
+            ${shader.fragmentShader}
+          `.replace(
+            '#include <dithering_fragment>',
+            `
+            #include <dithering_fragment>
+            float d = length(vWorldPosition.xy - uPointerWorldPos.xy);
+            float glow = exp(-1.6 * pow(d / max(300.0 * uScale, 1.0), 2.0)) * uPointerGlowStrength;
+            gl_FragColor.rgb += vec3(0.42, 0.37, 0.62) * 0.16 * glow;
+            `
+          );
+        };
+      }
+
+      return mat;
+    }
+
+    // ---------------------------------------------------------
+    // 4. PRINTED CONTENT: 2D HIGH-RES PAGE TEXTURE
+    // ---------------------------------------------------------
+    const pageCanvas = document.createElement('canvas');
+    const pageCtx = pageCanvas.getContext('2d');
+    const pageTexture = new THREE.CanvasTexture(pageCanvas);
+    pageTexture.colorSpace = THREE.SRGBColorSpace;
+    pageTexture.minFilter = THREE.LinearFilter;
+    pageTexture.magFilter = THREE.LinearFilter;
+
+    let isStudioHovered = false;
+    let isPaperHovered = false;
+
+    function renderPageCanvas() {
+      const dpr = Math.max(window.devicePixelRatio || 1, 1.5);
+      const cw = Math.round(panelWidth * dpr);
+      const ch = Math.round(panelHeight * dpr);
+
+      if (pageCanvas.width !== cw || pageCanvas.height !== ch) {
+        pageCanvas.width = cw;
+        pageCanvas.height = ch;
+      }
+
+      pageCtx.save();
+      pageCtx.clearRect(0, 0, cw, ch);
+      pageCtx.scale(dpr, dpr);
+
+      const s = S;
+      const padX = 54 * s;
+
+      // 1. Eyebrow "REAL-TIME MATERIAL STUDIO"
+      const eyebrowY = panelHeight * 0.135;
+      pageCtx.font = `600 ${Math.max(9, 11 * s)}px 'Inter', sans-serif`;
+      pageCtx.letterSpacing = '0.2em';
+      pageCtx.fillStyle = 'rgba(255, 255, 255, 0.38)';
+      pageCtx.fillText('REAL-TIME MATERIAL STUDIO', padX, eyebrowY);
+
+      // 2. Headline "Designed / in glass."
+      const headlineSize = Math.min(panelWidth * 0.078, panelHeight * 0.20);
+      pageCtx.font = `500 ${headlineSize}px 'Inter', sans-serif`;
+      pageCtx.letterSpacing = '-0.045em';
+      const leading = headlineSize * 0.97;
+      const headlineY = eyebrowY + 22 * s + headlineSize * 0.85;
+
+      const grad = pageCtx.createLinearGradient(0, headlineY - headlineSize, 0, headlineY + leading);
+      grad.addColorStop(0, '#dcdce0');
+      grad.addColorStop(1, '#bdbdc3');
+      pageCtx.fillStyle = grad;
+
+      pageCtx.fillText('Designed', padX, headlineY);
+      pageCtx.fillText('in glass.', padX, headlineY + leading);
+
+      // 3. Two-line sub "Author dispersion, transmission..."
+      const subSize = Math.max(12, 15.5 * s);
+      const subY = headlineY + leading + 36 * s;
+      pageCtx.font = `400 ${subSize}px 'Inter', sans-serif`;
+      pageCtx.letterSpacing = '-0.01em';
+      pageCtx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+      const subLeading = subSize * 1.52;
+      pageCtx.fillText('Author dispersion, transmission, and refraction in the browser. Live', padX, subY);
+      pageCtx.fillText('previews, real materials.', padX, subY + subLeading);
+
+      // 4. "Open studio" light pill button
+      const ctaY = subY + subLeading + 36 * s;
+      const pillW = 116 * s;
+      const pillH = 40 * s;
+      const pillR = 6;
+
+      pageCtx.save();
+      pageCtx.beginPath();
+      pageCtx.roundRect(padX, ctaY, pillW, pillH, pillR);
+      pageCtx.fillStyle = isStudioHovered ? '#36d67e' : '#f1f1f4';
+      pageCtx.fill();
+
+      pageCtx.font = `500 ${Math.max(11, 13.5 * s)}px 'Inter', sans-serif`;
+      pageCtx.letterSpacing = '-0.01em';
+      pageCtx.fillStyle = '#050507';
+      pageCtx.textAlign = 'center';
+      pageCtx.textBaseline = 'middle';
+      pageCtx.fillText('Open studio', padX + pillW / 2, ctaY + pillH / 2);
+      pageCtx.restore();
+
+      // 5. "Read paper →" link
+      const linkX = padX + pillW + 24 * s;
+      const linkY = ctaY + pillH / 2;
+      pageCtx.font = `400 ${Math.max(12, 14 * s)}px 'Inter', sans-serif`;
+      pageCtx.letterSpacing = '-0.01em';
+      pageCtx.fillStyle = isPaperHovered ? '#ffffff' : 'rgba(255, 255, 255, 0.85)';
+      pageCtx.textAlign = 'left';
+      pageCtx.textBaseline = 'middle';
+      pageCtx.fillText('Read paper →', linkX, linkY);
+
+      if (isPaperHovered) {
+        const textWidth = pageCtx.measureText('Read paper →').width;
+        pageCtx.strokeStyle = '#ffffff';
+        pageCtx.lineWidth = 1;
+        pageCtx.beginPath();
+        pageCtx.moveTo(linkX, linkY + 9 * s);
+        pageCtx.lineTo(linkX + textWidth, linkY + 9 * s);
+        pageCtx.stroke();
+      }
+
+      // 6. Bottom footer elements
+      const footerY = panelHeight - 28 * s;
+      pageCtx.font = `400 ${Math.max(9, 11 * s)}px 'Inter', sans-serif`;
+      pageCtx.letterSpacing = '0.04em';
+      pageCtx.fillStyle = 'rgba(255, 255, 255, 0.34)';
+      pageCtx.textAlign = 'left';
+      pageCtx.fillText('© Facet Lab', padX, footerY);
+
+      pageCtx.textAlign = 'right';
+      pageCtx.fillText('KHR_materials_dispersion', panelWidth - padX, footerY);
+
+      pageCtx.restore();
+      pageTexture.needsUpdate = true;
+    }
+
+    // ---------------------------------------------------------
+    // 5. NAV SLAB 2D CANVAS TEXTURE
+    // ---------------------------------------------------------
+    const navCanvas = document.createElement('canvas');
+    const navCtx = navCanvas.getContext('2d');
+    const navTexture = new THREE.CanvasTexture(navCanvas);
+    navTexture.colorSpace = THREE.SRGBColorSpace;
+
+    function renderNavCanvas() {
+      const dpr = Math.max(window.devicePixelRatio || 1, 1.5);
+      const nw = Math.round(blockWidth * dpr);
+      const nh = Math.round(navHeight * dpr);
+
+      if (navCanvas.width !== nw || navCanvas.height !== nh) {
+        navCanvas.width = nw;
+        navCanvas.height = nh;
+      }
+
+      navCtx.save();
+      navCtx.clearRect(0, 0, nw, nh);
+      navCtx.scale(dpr, dpr);
+
+      const s = S;
+      const padX = 28 * s;
+      const cy = navHeight / 2;
+
+      // Logo Mark & Text
+      const markSize = 14 * s;
+      navCtx.fillStyle = '#ffffff';
+      navCtx.beginPath();
+      navCtx.roundRect(padX, cy - markSize / 2, markSize, markSize, 3);
+      navCtx.fill();
+
+      navCtx.font = `600 ${Math.max(12, 15 * s)}px 'Inter', sans-serif`;
+      navCtx.letterSpacing = '-0.01em';
+      navCtx.textAlign = 'left';
+      navCtx.textBaseline = 'middle';
+      navCtx.fillText('Facet', padX + markSize + 9 * s, cy);
+
+      // Center links "Studio · Materials · Pricing"
+      navCtx.font = `400 ${Math.max(11, 13.5 * s)}px 'Inter', sans-serif`;
+      navCtx.letterSpacing = '-0.01em';
+      navCtx.textAlign = 'center';
+      navCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      navCtx.fillText('Studio  ·  Materials  ·  Pricing', blockWidth / 2, cy);
+
+      // Right "Sign in"
+      navCtx.font = `500 ${Math.max(11, 13.5 * s)}px 'Inter', sans-serif`;
+      navCtx.textAlign = 'right';
+      navCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      navCtx.fillText('Sign in', blockWidth - padX, cy);
+
+      navCtx.restore();
+      navTexture.needsUpdate = true;
+    }
+
+    // ---------------------------------------------------------
+    // 6. GEOMETRY GENERATOR: INSETTING & ROUNDED POLYGONS
+    // ---------------------------------------------------------
+    function insetPolygon(pts, inset) {
+      const n = pts.length;
+      const lines = [];
+
+      for (let i = 0; i < n; i++) {
+        const p1 = pts[i];
+        const p2 = pts[(i + 1) % n];
+        const dx = p2.x - p1.x;
+        const dy = p2.y - p1.y;
+        const len = Math.hypot(dx, dy);
+        if (len < 1e-5) continue;
+        const ux = dx / len;
+        const uy = dy / len;
+        // Inward normal for clockwise polygon (x right, y down) is (-uy, ux)
+        lines.push({
+          px: p1.x - uy * inset,
+          py: p1.y + ux * inset,
+          dx: ux,
+          dy: uy
+        });
+      }
+
+      const m = lines.length;
+      const result = [];
+      for (let i = 0; i < m; i++) {
+        const l1 = lines[(i - 1 + m) % m];
+        const l2 = lines[i];
+        const cross = l2.dx * l1.dy - l2.dy * l1.dx;
+        if (Math.abs(cross) < 1e-6) {
+          result.push({ x: l2.px, y: l2.py });
+        } else {
+          const t = ((l1.px - l2.px) * l1.dy - (l1.py - l2.py) * l1.dx) / cross;
+          const rx = l2.px + l2.dx * t;
+          const ry = l2.py + l2.dy * t;
+          result.push({ x: rx, y: ry });
+        }
+      }
+      return result;
+    }
+
+    function makeRoundedShape(pts, r) {
+      const n = pts.length;
+      const shape = new THREE.Shape();
+      const cutA = [];
+      const cutB = [];
+
+      for (let i = 0; i < n; i++) {
+        const prev = pts[(i - 1 + n) % n];
+        const curr = pts[i];
+        const next = pts[(i + 1) % n];
+
+        const dxIn = curr.x - prev.x, dyIn = curr.y - prev.y;
+        const lenIn = Math.hypot(dxIn, dyIn);
+        const uxIn = lenIn > 0 ? dxIn / lenIn : 0;
+        const uyIn = lenIn > 0 ? dyIn / lenIn : 0;
+
+        const dxOut = next.x - curr.x, dyOut = next.y - curr.y;
+        const lenOut = Math.hypot(dxOut, dyOut);
+        const uxOut = lenOut > 0 ? dxOut / lenOut : 0;
+        const uyOut = lenOut > 0 ? dyOut / lenOut : 0;
+
+        const dot = -(uxIn * uxOut + uyIn * uyOut);
+        const angle = Math.acos(Math.max(-1, Math.min(1, dot)));
+        let dist = r * Math.tan(angle / 2);
+        const maxDist = Math.min(lenIn, lenOut) * 0.45;
+        dist = Math.min(dist, maxDist);
+
+        cutA.push({ x: curr.x - uxIn * dist, y: curr.y - uyIn * dist });
+        cutB.push({ x: curr.x + uxOut * dist, y: curr.y + uyOut * dist });
+      }
+
+      shape.moveTo(cutB[0].x, cutB[0].y);
+      for (let i = 1; i <= n; i++) {
+        const idx = i % n;
+        shape.lineTo(cutA[idx].x, cutA[idx].y);
+        shape.quadraticCurveTo(pts[idx].x, pts[idx].y, cutB[idx].x, cutB[idx].y);
+      }
+      return shape;
+    }
+
+    // ---------------------------------------------------------
+    // 7. CUT PATTERN DRIFT, PUSH & DYNAMIC REBUILD
+    // ---------------------------------------------------------
+    let pointerPanelX = 0.5;
+    let pointerPanelY = 0.5;
+    let pointerInWindow = false;
+
+    // Piece definitions
+    const PIECE_NAMES = ['A', 'B', 'C', 'D', 'E'];
+    const shardPieces = []; // { name, group, glassMesh, textMesh, material, spring, shatter }
+    let navPiece = null;
+
+    function buildShardGeometries(t) {
+      const s = S;
+      const cornerR = 20 * s;
+      const depth = 13 * s;
+      const bevel = 2.6 * s;
+      const halfGap = 7 * s;
+
+      // Base junction and edge coordinates in normalized panel space
+      let tAB_x = 0.22 + 0.03 * Math.sin(t * (Math.PI * 2 / 14) + 0.5);
+      let tBC_x = 0.515 + 0.03 * Math.sin(t * (Math.PI * 2 / 18) + 1.2);
+      let tCE_x = 0.84 + 0.03 * Math.sin(t * (Math.PI * 2 / 12) + 2.1);
+      let bAD_x = 0.34 + 0.03 * Math.sin(t * (Math.PI * 2 / 16) + 3.0);
+      let bDE_x = 0.865 + 0.03 * Math.sin(t * (Math.PI * 2 / 20) + 4.2);
+
+      let J0 = {
+        x: 0.385 + 0.03 * Math.sin(t * (Math.PI * 2 / 15) + 1.8),
+        y: 0.72 + 0.05 * Math.cos(t * (Math.PI * 2 / 17) + 0.9)
+      };
+      let J1 = {
+        x: 0.48 + 0.03 * Math.sin(t * (Math.PI * 2 / 13) + 3.4),
+        y: 0.62 + 0.05 * Math.cos(t * (Math.PI * 2 / 19) + 2.4)
+      };
+      let J2 = {
+        x: 0.716 + 0.03 * Math.sin(t * (Math.PI * 2 / 17) + 5.1),
+        y: 0.49 + 0.05 * Math.cos(t * (Math.PI * 2 / 11) + 4.0)
+      };
+
+      // Cursor push: points within 0.6 pushed away by up to 0.05
+      if (pointerInWindow) {
+        const applyPush = (pt, isEdge = false) => {
+          const dx = pt.x - pointerPanelX;
+          const dy = pt.y - pointerPanelY;
+          const dist = Math.hypot(dx, dy);
+          if (dist < 0.6 && dist > 1e-4) {
+            const factor = 0.05 * Math.pow(1 - dist / 0.6, 2);
+            if (isEdge) {
+              pt.x += (dx / dist) * factor;
+            } else {
+              pt.x += (dx / dist) * factor;
+              pt.y += (dy / dist) * factor;
+            }
+          }
+        };
+
+        const tAB_pt = { x: tAB_x, y: 0 }; applyPush(tAB_pt, true); tAB_x = tAB_pt.x;
+        const tBC_pt = { x: tBC_x, y: 0 }; applyPush(tBC_pt, true); tBC_x = tBC_pt.x;
+        const tCE_pt = { x: tCE_x, y: 0 }; applyPush(tCE_pt, true); tCE_x = tCE_pt.x;
+        const bAD_pt = { x: bAD_x, y: 1 }; applyPush(bAD_pt, true); bAD_x = bAD_pt.x;
+        const bDE_pt = { x: bDE_x, y: 1 }; applyPush(bDE_pt, true); bDE_x = bDE_pt.x;
+
+        applyPush(J0);
+        applyPush(J1);
+        applyPush(J2);
+      }
+
+      // 4 outer corners
+      const TL = { x: 0, y: 0 };
+      const TR = { x: 1, y: 0 };
+      const BL = { x: 0, y: 1 };
+      const BR = { x: 1, y: 1 };
+
+      const tAB = { x: tAB_x, y: 0 };
+      const tBC = { x: tBC_x, y: 0 };
+      const tCE = { x: tCE_x, y: 0 };
+      const bAD = { x: bAD_x, y: 1 };
+      const bDE = { x: bDE_x, y: 1 };
+
+      let cellPolys = {
+        A: [TL, tAB, J0, bAD, BL],
+        B: [tAB, tBC, J1, J0],
+        C: [tBC, tCE, J2, J1],
+        D: [J0, J1, J2, bDE, bAD],
+        E: [tCE, TR, BR, bDE, J2]
+      };
+
+      // Portrait transposition: transpose coordinates so Hero cell A sits on top
+      if (isPortrait) {
+        for (let key in cellPolys) {
+          cellPolys[key] = cellPolys[key].map(p => ({ x: p.y, y: p.x }));
+        }
+      }
+
+      const extrudeSettings = {
+        depth: depth,
+        bevelEnabled: true,
+        bevelThickness: bevel,
+        bevelSize: bevel,
+        bevelSegments: 3,
+        curveSegments: 12
+      };
+
+      PIECE_NAMES.forEach((name, i) => {
+        const poly = cellPolys[name];
+
+        // Convert normalized coordinates to panel pixel space
+        const pixelPoly = poly.map(p => ({
+          x: p.x * panelWidth,
+          y: p.y * panelHeight
+        }));
+
+        // Inset by half gap (7 * S)
+        const insetPoly = insetPolygon(pixelPoly, halfGap);
+
+        // Convert to Three.js centered coordinates (X centered, Y flipped and centered)
+        const centeredThreePoly = insetPoly.map(p => ({
+          x: p.x - panelWidth / 2,
+          y: panelHeight / 2 - p.y
+        }));
+
+        // Build rounded shape
+        const shape = makeRoundedShape(centeredThreePoly, cornerR);
+
+        // Build extruded glass geometry
+        const glassGeom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+        // Translate so top face sits at z = 0
+        glassGeom.translate(0, 0, -(depth + bevel));
+
+        // Build printed text shape geometry (at z = 0.2 * S)
+        const textGeom = new THREE.ShapeGeometry(shape);
+
+        // Map UV coordinates to panel normalized space
+        const posAttr = textGeom.attributes.position;
+        const uvs = new Float32Array(posAttr.count * 2);
+        for (let k = 0; k < posAttr.count; k++) {
+          const vx = posAttr.getX(k);
+          const vy = posAttr.getY(k);
+          const u = (vx + panelWidth / 2) / panelWidth;
+          const v = (vy + panelHeight / 2) / panelHeight;
+          uvs[k * 2] = u;
+          uvs[k * 2 + 1] = v;
+        }
+        textGeom.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+
+        const piece = shardPieces[i];
+        if (piece.glassMesh.geometry) piece.glassMesh.geometry.dispose();
+        if (piece.textMesh.geometry) piece.textMesh.geometry.dispose();
+
+        piece.glassMesh.geometry = glassGeom;
+        piece.textMesh.geometry = textGeom;
+
+        // Compute centroid for physics tumble and outward velocity
+        let cx = 0, cy = 0;
+        centeredThreePoly.forEach(p => { cx += p.x; cy += p.y; });
+        piece.centroid = new THREE.Vector2(cx / centeredThreePoly.length, cy / centeredThreePoly.length);
+      });
+    }
+
+    // Build Nav Slab Geometry
+    function buildNavSlabGeometry() {
+      const s = S;
+      const cornerR = 20 * s;
+      const depth = 13 * s;
+      const bevel = 2.6 * s;
+      const halfGap = 7 * s;
+
+      const w = blockWidth;
+      const h = navHeight;
+
+      const rawPoly = [
+        { x: 0, y: 0 },
+        { x: w, y: 0 },
+        { x: w, y: h },
+        { x: 0, y: h }
+      ];
+
+      const insetPoly = insetPolygon(rawPoly, halfGap);
+      const centeredPoly = insetPoly.map(p => ({
+        x: p.x - w / 2,
+        y: h / 2 - p.y
+      }));
+
+      const shape = makeRoundedShape(centeredPoly, cornerR);
+      const extrudeSettings = {
+        depth: depth,
+        bevelEnabled: true,
+        bevelThickness: bevel,
+        bevelSize: bevel,
+        bevelSegments: 3,
+        curveSegments: 12
+      };
+
+      const glassGeom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+      glassGeom.translate(0, 0, -(depth + bevel));
+
+      const textGeom = new THREE.ShapeGeometry(shape);
+      const posAttr = textGeom.attributes.position;
+      const uvs = new Float32Array(posAttr.count * 2);
+      for (let k = 0; k < posAttr.count; k++) {
+        const vx = posAttr.getX(k);
+        const vy = posAttr.getY(k);
+        uvs[k * 2] = (vx + w / 2) / w;
+        uvs[k * 2 + 1] = (vy + h / 2) / h;
+      }
+      textGeom.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+
+      if (navPiece.glassMesh.geometry) navPiece.glassMesh.geometry.dispose();
+      if (navPiece.textMesh.geometry) navPiece.textMesh.geometry.dispose();
+
+      navPiece.glassMesh.geometry = glassGeom;
+      navPiece.textMesh.geometry = textGeom;
+      navPiece.centroid = new THREE.Vector2(0, 0);
+    }
+
+    // ---------------------------------------------------------
+    // 8. ASSEMBLE 3D PIECES & GROUPS
+    // ---------------------------------------------------------
+    const panelGroup = new THREE.Group();
+    blockGroup.add(panelGroup);
+
+    // Create materials
+    const textMaterial = new THREE.MeshBasicMaterial({
+      map: pageTexture,
+      transparent: true,
+      depthWrite: false,
+    });
+
+    const navTextMaterial = new THREE.MeshBasicMaterial({
+      map: navTexture,
+      transparent: true,
+      depthWrite: false,
+    });
+
+    // Initialize 5 Shard Pieces
+    PIECE_NAMES.forEach((name, i) => {
+      const group = new THREE.Group();
+      panelGroup.add(group);
+
+      const glassMat = createGlassMaterial();
+      const glassMesh = new THREE.Mesh(new THREE.BufferGeometry(), glassMat);
+      glassMesh.userData = { pieceIndex: i, isNav: false, isCell: true };
+      group.add(glassMesh);
+
+      const textMesh = new THREE.Mesh(new THREE.BufferGeometry(), textMaterial);
+      textMesh.position.z = 0.2 * S;
+      group.add(textMesh);
+
+      shardPieces.push({
+        name,
+        group,
+        glassMesh,
+        textMesh,
+        material: glassMat,
+        centroid: new THREE.Vector2(0, 0),
+        spring: {
+          z: 0, vz: 0,
+          tiltX: 0, vtx: 0,
+          tiltY: 0, vty: 0,
+          isHovered: false
+        },
+        shatter: {
+          rotAxis: new THREE.Vector3(
+            (Math.sin(i * 1.7) * 2 - 1),
+            (Math.cos(i * 2.3) * 2 - 1),
+            (Math.sin(i * 3.1) * 2 - 1)
+          ).normalize(),
+          rotAngle: 2.0 + (i * 0.32),
+          zTravel: 420 * S + (i * 75 * S)
+        }
+      });
+    });
+
+    // Initialize Nav Slab Piece
+    {
+      const group = new THREE.Group();
+      blockGroup.add(group);
+
+      const glassMat = createGlassMaterial();
+      const glassMesh = new THREE.Mesh(new THREE.BufferGeometry(), glassMat);
+      glassMesh.userData = { pieceIndex: -1, isNav: true, isCell: false };
+      group.add(glassMesh);
+
+      const textMesh = new THREE.Mesh(new THREE.BufferGeometry(), navTextMaterial);
+      textMesh.position.z = 0.2 * S;
+      group.add(textMesh);
+
+      navPiece = {
+        name: 'NAV',
+        group,
+        glassMesh,
+        textMesh,
+        material: glassMat,
+        centroid: new THREE.Vector2(0, 0),
+        spring: {
+          z: 0, vz: 0,
+          tiltX: 0, vtx: 0,
+          tiltY: 0, vty: 0,
+          isHovered: false
+        },
+        shatter: {
+          rotAxis: new THREE.Vector3(0.3, 0.9, 0.2).normalize(),
+          rotAngle: 2.2,
+          zTravel: 580 * S
+        }
+      };
+    }
+
+    // ---------------------------------------------------------
+    // 9. THE "← BACK" SLIVER 3D SHARD
+    // ---------------------------------------------------------
+    let backSliverGroup = new THREE.Group();
+    let backSliverMesh = null;
+    let backSliverScale = { current: 0, target: 0 };
+    let backSliverHoverTilt = { x: 0, y: 0 };
+
+    function createBackSliver() {
+      const k = W / 1918;
+      // Viewport fractions: (.147,.243) (.252,.169) (.287,.277) (.151,.258)
+      const rawVpFractions = [
+        { x: 0.147, y: 0.243 },
+        { x: 0.252, y: 0.169 },
+        { x: 0.287, y: 0.277 },
+        { x: 0.151, y: 0.258 }
+      ];
+
+      // Convert to Three.js centered coordinates
+      const pixelPts = rawVpFractions.map(p => ({
+        x: p.x * W - W / 2,
+        y: H / 2 - p.y * H
+      }));
+
+      // Centroid
+      let cx = 0, cy = 0;
+      pixelPts.forEach(p => { cx += p.x; cy += p.y; });
+      cx /= 4; cy /= 4;
+
+      const localPts = pixelPts.map(p => ({ x: p.x - cx, y: p.y - cy }));
+      const shape = makeRoundedShape(localPts, 12 * k);
+
+      const depth = 11 * k;
+      const bevel = 2.2 * k;
+
+      const extrudeSettings = {
+        depth: depth,
+        bevelEnabled: true,
+        bevelThickness: bevel,
+        bevelSize: bevel,
+        bevelSegments: 3,
+        curveSegments: 12
+      };
+
+      const geom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+      geom.translate(0, 0, -(depth + bevel));
+
+      const mat = createGlassMaterial({ iridescence: 0.35, noCursorGlow: true });
+
+      backSliverMesh = new THREE.Mesh(geom, mat);
+      backSliverMesh.userData = { isBackSliver: true };
+
+      backSliverGroup.position.set(cx, cy, 30 * S);
+      // Leans in 3D: rotateY -0.16, rotateX 0.08
+      backSliverGroup.rotation.set(0.08, -0.16, 0);
+      backSliverGroup.scale.set(0, 0, 0);
+      backSliverGroup.add(backSliverMesh);
+      scene.add(backSliverGroup);
+    }
+    createBackSliver();
+
+    // ---------------------------------------------------------
+    // 10. HOMOGRAPHY SOLVER FOR DOM TEXT LAYER
+    // ---------------------------------------------------------
+    function solveHomography(src, dst) {
+      const A = [];
+      const b = [];
+      for (let i = 0; i < 4; i++) {
+        const sx = src[i].x, sy = src[i].y;
+        const dx = dst[i].x, dy = dst[i].y;
+        A.push([sx, sy, 1, 0, 0, 0, -sx * dx, -sy * dx]);
+        b.push(dx);
+        A.push([0, 0, 0, sx, sy, 1, -sx * dy, -sy * dy]);
+        b.push(dy);
+      }
+
+      const n = 8;
+      for (let i = 0; i < n; i++) {
+        let maxRow = i;
+        for (let k = i + 1; k < n; k++) {
+          if (Math.abs(A[k][i]) > Math.abs(A[maxRow][i])) maxRow = k;
+        }
+        const tmpA = A[i]; A[i] = A[maxRow]; A[maxRow] = tmpA;
+        const tmpB = b[i]; b[i] = b[maxRow]; b[maxRow] = tmpB;
+
+        for (let k = i + 1; k < n; k++) {
+          const c = -A[k][i] / A[i][i];
+          for (let j = i; j < n; j++) {
+            if (i === j) A[k][j] = 0;
+            else A[k][j] += c * A[i][j];
+          }
+          b[k] += c * b[i];
+        }
+      }
+
+      const h = new Array(8);
+      for (let i = n - 1; i >= 0; i--) {
+        let s = b[i];
+        for (let j = i + 1; j < n; j++) s -= A[i][j] * h[j];
+        h[i] = s / A[i][i];
+      }
+      return [h[0], h[1], h[2], h[3], h[4], h[5], h[6], h[7], 1];
+    }
+
+    function projectPointToScreen(vWorld) {
+      const v = vWorld.clone().project(camera);
+      return {
+        x: (v.x + 1) * 0.5 * W,
+        y: (1 - v.y) * 0.5 * H
+      };
+    }
+
+    const domPanelEl = document.getElementById('dom-layer-panel');
+    const domNavEl = document.getElementById('dom-layer-nav');
+
+    function updateDOMHomography() {
+      // 1. Shard Panel Homography
+      const pw = panelWidth;
+      const ph = panelHeight;
+      const pCorners = [
+        new THREE.Vector3(-pw / 2, ph / 2, 0),
+        new THREE.Vector3(pw / 2, ph / 2, 0),
+        new THREE.Vector3(pw / 2, -ph / 2, 0),
+        new THREE.Vector3(-pw / 2, -ph / 2, 0),
+      ];
+
+      panelGroup.updateMatrixWorld(true);
+      const pScreen = pCorners.map(c => projectPointToScreen(c.applyMatrix4(panelGroup.matrixWorld)));
+      const pSrc = [{ x: 0, y: 0 }, { x: pw, y: 0 }, { x: pw, y: ph }, { x: 0, y: ph }];
+      const Hp = solveHomography(pSrc, pScreen);
+
+      domPanelEl.style.width = `${pw}px`;
+      domPanelEl.style.height = `${ph}px`;
+      domPanelEl.style.transform = `matrix3d(
+        ${Hp[0]}, ${Hp[3]}, 0, ${Hp[6]},
+        ${Hp[1]}, ${Hp[4]}, 0, ${Hp[7]},
+        0, 0, 1, 0,
+        ${Hp[2]}, ${Hp[5]}, 0, ${Hp[8]}
+      )`;
+
+      // 2. Nav Slab Homography
+      const nw = blockWidth;
+      const nh = navHeight;
+      const nCorners = [
+        new THREE.Vector3(-nw / 2, nh / 2, 0),
+        new THREE.Vector3(nw / 2, nh / 2, 0),
+        new THREE.Vector3(nw / 2, -nh / 2, 0),
+        new THREE.Vector3(-nw / 2, -nh / 2, 0),
+      ];
+
+      navPiece.group.updateMatrixWorld(true);
+      const nScreen = nCorners.map(c => projectPointToScreen(c.applyMatrix4(navPiece.group.matrixWorld)));
+      const nSrc = [{ x: 0, y: 0 }, { x: nw, y: 0 }, { x: nw, y: nh }, { x: 0, y: nh }];
+      const Hn = solveHomography(nSrc, nScreen);
+
+      domNavEl.style.width = `${nw}px`;
+      domNavEl.style.height = `${nh}px`;
+      domNavEl.style.transform = `matrix3d(
+        ${Hn[0]}, ${Hn[3]}, 0, ${Hn[6]},
+        ${Hn[1]}, ${Hn[4]}, 0, ${Hn[7]},
+        0, 0, 1, 0,
+        ${Hn[2]}, ${Hn[5]}, 0, ${Hn[8]}
+      )`;
+    }
+
+    // ---------------------------------------------------------
+    // 11. POSITION GROUPS IN BLOCK LAYOUT
+    // ---------------------------------------------------------
+    function layoutBlockGroups() {
+      // Entire block centered at Y = 0
+      const topY = blockHeight / 2;
+      const navY = topY - navHeight / 2;
+      const panelY = navY - navHeight / 2 - gap - panelHeight / 2;
+
+      navPiece.group.position.set(0, navY, 0);
+      panelGroup.position.set(0, panelY, 0);
+
+      renderPageCanvas();
+      renderNavCanvas();
+      buildNavSlabGeometry();
+      buildShardGeometries(0);
+    }
+    layoutBlockGroups();
+
+    // ---------------------------------------------------------
+    // 12. INTERACTION: MOUSE TRACKING, GLOBAL TILT & RAYCASTING
+    // ---------------------------------------------------------
+    let mouseNDC = new THREE.Vector2(-10, -10);
+    let targetRotX = 0;
+    let targetRotY = 0;
+    let curRotX = 0.014; // rest tilt
+    let curRotY = -0.021;
+
+    const raycaster = new THREE.Raycaster();
+    const planeZ0 = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+
+    window.addEventListener('mousemove', (e) => {
+      pointerInWindow = true;
+      pointerGlowStrength.value = 1.0;
+
+      const normX = (e.clientX / W) * 2 - 1;
+      const normY = -(e.clientY / H) * 2 + 1;
+      mouseNDC.set(normX, normY);
+
+      // Global tilt: rotateY = x * 7° - 1.2°, rotateX = -y * 5.5° + 0.8°
+      targetRotY = (normX * 7.0 - 1.2) * (Math.PI / 180);
+      targetRotX = (-normY * 5.5 + 0.8) * (Math.PI / 180);
+
+      // Raycast to Z = 0 plane for world pointer position
+      raycaster.setFromCamera(mouseNDC, camera);
+      raycaster.ray.intersectPlane(planeZ0, pointerWorldPos);
+
+      // Normalized coordinates within shard panel
+      const panelWorldY = panelGroup.position.y;
+      pointerPanelX = (pointerWorldPos.x + panelWidth / 2) / panelWidth;
+      pointerPanelY = (panelHeight / 2 - (pointerWorldPos.y - panelWorldY)) / panelHeight;
+    });
+
+    window.addEventListener('mouseleave', () => {
+      pointerInWindow = false;
+      pointerGlowStrength.value = 0.0;
+      targetRotX = 0.8 * (Math.PI / 180);
+      targetRotY = -1.2 * (Math.PI / 180);
+    });
+
+    // ---------------------------------------------------------
+    // 13. SHATTER & REASSEMBLE TRANSITION CONTROLLER
+    // ---------------------------------------------------------
+    // States: 'idle' | 'shattering' | 'paper_view' | 'reassembling'
+    let appState = 'reassembling'; // Initial load fly-in!
+    let transitionTimer = 0;
+    const SHATTER_DURATION = 0.72;
+
+    const defOverlay = document.getElementById('definitions-overlay');
+    const backBtn = document.getElementById('back-btn-hitarea');
+    const readPaperBtn = document.getElementById('btn-read-paper');
+    const openStudioBtn = document.getElementById('btn-open-studio');
+
+    // Trigger Shatter
+    function triggerShatter() {
+      if (appState !== 'idle') return;
+      appState = 'shattering';
+      transitionTimer = 0;
+
+      domPanelEl.classList.add('hidden');
+      domNavEl.classList.add('hidden');
+    }
+
+    // Trigger Reassemble (Back)
+    function triggerBack() {
+      if (appState !== 'paper_view') return;
+      appState = 'reassembling';
+      transitionTimer = 0;
+
+      defOverlay.classList.remove('active');
+      backBtn.style.display = 'none';
+      backSliverScale.target = 0;
+    }
+
+    readPaperBtn.addEventListener('click', triggerShatter);
+    backBtn.addEventListener('click', triggerBack);
+
+    openStudioBtn.addEventListener('mouseenter', () => { isStudioHovered = true; renderPageCanvas(); });
+    openStudioBtn.addEventListener('mouseleave', () => { isStudioHovered = false; renderPageCanvas(); });
+    readPaperBtn.addEventListener('mouseenter', () => { isPaperHovered = true; renderPageCanvas(); });
+    readPaperBtn.addEventListener('mouseleave', () => { isPaperHovered = false; renderPageCanvas(); });
+
+    // ---------------------------------------------------------
+    // 14. WINDOW RESIZE HANDLER
+    // ---------------------------------------------------------
+    window.addEventListener('resize', () => {
+      computeDimensions();
+      updateCameraDistance();
+      camera.aspect = W / H;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(W, H);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      layoutBlockGroups();
+    });
+
+    // ---------------------------------------------------------
+    // 15. MAIN ANIMATION & PHYSICS TICK (60 FPS)
+    // ---------------------------------------------------------
+    let lastTime = performance.now();
+    let rebuildAccumulator = 0;
+    const REBUILD_INTERVAL = 1.0 / 45.0; // Rebuild ~45x/sec
+
+    // Spring constants from spec: k = 170, c = 19
+    const SPRING_K = 170;
+    const SPRING_C = 19;
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const now = performance.now();
+      const dt = Math.min((now - lastTime) / 1000, 0.06);
+      lastTime = now;
+      const t = now * 0.001;
+
+      // 1. Rebuild shard geometry ~45x/s during idle
+      if (appState === 'idle') {
+        rebuildAccumulator += dt;
+        if (rebuildAccumulator >= REBUILD_INTERVAL) {
+          rebuildAccumulator -= REBUILD_INTERVAL;
+          buildShardGeometries(t);
+        }
+      }
+
+      // 2. Global Slab Tilt: 0.3s exponential smoothing
+      const tiltAlpha = 1.0 - Math.exp(-dt / 0.3);
+      curRotY += (targetRotY - curRotY) * tiltAlpha;
+      curRotX += (targetRotX - curRotX) * tiltAlpha;
+      blockGroup.rotation.y = curRotY;
+      blockGroup.rotation.x = curRotX;
+
+      // 3. Hover Raycasting on pieces
+      let hoveredPiece = null;
+      if (appState === 'idle') {
+        raycaster.setFromCamera(mouseNDC, camera);
+        const pickableMeshes = shardPieces.map(p => p.glassMesh).concat([navPiece.glassMesh]);
+        const intersects = raycaster.intersectObjects(pickableMeshes, false);
+
+        if (intersects.length > 0) {
+          const hitMesh = intersects[0].object;
+          if (hitMesh.userData.isNav) {
+            hoveredPiece = navPiece;
+          } else {
+            hoveredPiece = shardPieces[hitMesh.userData.pieceIndex];
+          }
+        }
+      }
+
+      // 4. Update Spring Physics for each piece
+      const allPieces = [...shardPieces, navPiece];
+      allPieces.forEach((p) => {
+        const isHov = (p === hoveredPiece);
+        const s = S;
+        const targetZ = isHov ? (p.name === 'NAV' ? 32 * s : 50 * s) : 0;
+
+        let targetTx = 0;
+        let targetTy = 0;
+        if (isHov) {
+          // Edge nearest the pointer dips away (±0.24 rad max)
+          const localOffset = pointerWorldPos.clone().sub(p.group.position);
+          targetTy = -THREE.MathUtils.clamp(localOffset.x / (blockWidth * 0.25), -1, 1) * 0.24;
+          targetTx = THREE.MathUtils.clamp(localOffset.y / (panelHeight * 0.25), -1, 1) * 0.24;
+        }
+
+        // Spring equations (k 170, c 19)
+        const az = -SPRING_K * (p.spring.z - targetZ) - SPRING_C * p.spring.vz;
+        p.spring.vz += az * dt;
+        p.spring.z += p.spring.vz * dt;
+
+        const atx = -SPRING_K * (p.spring.tiltX - targetTx) - SPRING_C * p.spring.vtx;
+        p.spring.vtx += atx * dt;
+        p.spring.tiltX += p.spring.vtx * dt;
+
+        const aty = -SPRING_K * (p.spring.tiltY - targetTy) - SPRING_C * p.spring.vty;
+        p.spring.vty += aty * dt;
+        p.spring.tiltY += p.spring.vty * dt;
+
+        // Hover iridescence (0.55 -> 1.0) and envMapIntensity (1.0 -> 1.9)
+        const targetIridescence = isHov ? 1.0 : 0.55;
+        const targetEnvMap = isHov ? 1.9 : 1.0;
+        p.material.iridescence += (targetIridescence - p.material.iridescence) * 0.15;
+        p.material.envMapIntensity += (targetEnvMap - p.material.envMapIntensity) * 0.15;
+
+        // Apply springs when in idle
+        if (appState === 'idle') {
+          p.group.position.z = p.spring.z;
+          p.group.rotation.x = p.spring.tiltX;
+          p.group.rotation.y = p.spring.tiltY;
+        }
+      });
+
+      // 5. Shatter & Reassemble Physics Transitions
+      if (appState === 'shattering') {
+        transitionTimer += dt;
+        const progress = Math.min(transitionTimer / SHATTER_DURATION, 1.0);
+
+        // Definitions view fades in from 0.28s over 0.4s
+        if (transitionTimer >= 0.28) {
+          defOverlay.classList.add('active');
+        }
+
+        // "← Back" sliver grows in from 0.3s
+        if (transitionTimer >= 0.30) {
+          backSliverScale.target = 1.0;
+          backBtn.style.display = 'block';
+        }
+
+        // Move shards along shatter trajectory
+        allPieces.forEach((p, idx) => {
+          const stagger = idx === 5 ? 0 : 0.03 * (idx + 1); // Nav first, then cells
+          const effDur = Math.max(SHATTER_DURATION - stagger, 0.2);
+          const tau = THREE.MathUtils.clamp((transitionTimer - stagger) / effDur, 0, 1);
+          const easeIn = tau * tau * tau; // Ease-in cubic
+
+          // Outward and downward velocity plus 420–800*S toward camera
+          const outDir = new THREE.Vector3(p.centroid.x, p.centroid.y, 0).normalize();
+          if (p.name === 'NAV') outDir.set(0, 1, 0);
+
+          const dispX = outDir.x * 380 * S * easeIn;
+          const dispY = (outDir.y * 380 * S - 320 * S) * easeIn; // gravity pull
+          const dispZ = p.shatter.zTravel * easeIn;
+
+          p.group.position.set(dispX, (p.name === 'NAV' ? (blockHeight / 2 - navHeight / 2) : (panelGroup.position.y)) + dispY, dispZ);
+          p.group.setRotationFromAxisAngle(p.shatter.rotAxis, p.shatter.rotAngle * easeIn);
+        });
+
+        if (progress >= 1.0) {
+          appState = 'paper_view';
+        }
+      } else if (appState === 'reassembling') {
+        transitionTimer += dt;
+        const progress = Math.min(transitionTimer / SHATTER_DURATION, 1.0);
+
+        // Reassemble with ease-out-back
+        const c1 = 2.70158;
+        const c2 = c1 - 1;
+
+        allPieces.forEach((p, idx) => {
+          const stagger = idx === 5 ? 0 : 0.03 * (idx + 1);
+          const effDur = Math.max(SHATTER_DURATION - stagger, 0.2);
+          const u = THREE.MathUtils.clamp((transitionTimer - stagger) / effDur, 0, 1);
+
+          // Ease-out-back
+          const easeOutBack = (u === 1) ? 1 : 1 + c1 * Math.pow(u - 1, 3) + c2 * Math.pow(u - 1, 2);
+          const rev = Math.max(0, 1.0 - easeOutBack);
+
+          const outDir = new THREE.Vector3(p.centroid.x, p.centroid.y, 0).normalize();
+          if (p.name === 'NAV') outDir.set(0, 1, 0);
+
+          const dispX = outDir.x * 380 * S * rev;
+          const dispY = (outDir.y * 380 * S - 320 * S) * rev;
+          const dispZ = p.shatter.zTravel * rev;
+
+          const baseY = (p.name === 'NAV' ? (blockHeight / 2 - navHeight / 2) : 0);
+          p.group.position.set(dispX, baseY + dispY, dispZ);
+          p.group.setRotationFromAxisAngle(p.shatter.rotAxis, p.shatter.rotAngle * rev);
+        });
+
+        if (progress >= 1.0) {
+          appState = 'idle';
+          allPieces.forEach(p => {
+            p.group.position.set(0, (p.name === 'NAV' ? (blockHeight / 2 - navHeight / 2) : 0), 0);
+            p.group.rotation.set(0, 0, 0);
+          });
+          domPanelEl.classList.remove('hidden');
+          domNavEl.classList.remove('hidden');
+        }
+      }
+
+      // 6. Update "← Back" Sliver 3D Shard
+      backSliverScale.current += (backSliverScale.target - backSliverScale.current) * 0.15;
+      const curS = backSliverScale.current;
+      backSliverGroup.scale.set(curS, curS, curS);
+
+      if (curS > 0.01) {
+        // Idle wobble (±.03–.04 rad at ≈1 Hz)
+        const wobbleY = Math.sin(t * Math.PI * 2 * 0.95) * 0.035;
+        const wobbleX = Math.cos(t * Math.PI * 2 * 1.05) * 0.025;
+
+        // Hover raycast check for Back sliver
+        raycaster.setFromCamera(mouseNDC, camera);
+        const sliverHits = raycaster.intersectObject(backSliverMesh, false);
+        const isSliverHovered = sliverHits.length > 0;
+
+        let targetTipX = 0, targetTipY = 0;
+        if (isSliverHovered) {
+          targetTipX = 0.14 * (pointerWorldPos.y > backSliverGroup.position.y ? 1 : -1);
+          targetTipY = 0.14 * (pointerWorldPos.x > backSliverGroup.position.x ? -1 : 1);
+          backBtn.style.color = '#b9abff';
+        } else {
+          backBtn.style.color = '#ffffff';
+        }
+
+        backSliverHoverTilt.x += (targetTipX - backSliverHoverTilt.x) * 0.15;
+        backSliverHoverTilt.y += (targetTipY - backSliverHoverTilt.y) * 0.15;
+
+        backSliverGroup.rotation.set(
+          0.08 + wobbleX + backSliverHoverTilt.x,
+          -0.16 + wobbleY + backSliverHoverTilt.y,
+          0
+        );
+
+        // Position DOM Back button over the 3D sliver center (0.219 W, 0.238 H)
+        backBtn.style.left = `${0.219 * W}px`;
+        backBtn.style.top = `${0.238 * H}px`;
+      }
+
+      // 7. Update DOM Homography matrix3d
+      if (appState === 'idle') {
+        updateDOMHomography();
+      }
+
+      // 8. Render Scene
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  </script>
 
 </body>
 </html>
