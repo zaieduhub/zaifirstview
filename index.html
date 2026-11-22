@@ -3,779 +3,1123 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="R. Rusaith Ahamed (Zai) — IT Enthusiast, Tech Support Specialist & Creative Professional. Portfolio showcasing skills in ICT, graphic design, web development, and AI." />
-  <meta name="keywords" content="R. Rusaith Ahamed, Zai, IT Enthusiast, Tech Support, Graphic Designer, Web Developer, AI Trainer, Portfolio" />
-  <meta name="author" content="R. Rusaith Ahamed" />
+  <meta name="description" content="R. Rusaith Ahamed (Zai) — 3D Cinematic Portfolio. Graphic Designer (1 Year Exp), Full-Stack Web Developer, AI Systems Creator, and ICT Specialist." />
+  <meta name="keywords" content="R. Rusaith Ahamed, Zai, Graphic Designer, 3D Portfolio, Three.js, WebGL, Web Developer, AI Trainer, Zai Neo, Sri Lanka" />
+  <meta name="author" content="R. Rusaith Ahamed (Zai)" />
   <meta name="robots" content="index, follow" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="R. Rusaith Ahamed — Portfolio" />
-  <meta property="og:description" content="IT Enthusiast | Tech Support | Creative Professional" />
+  <!-- Open Graph / Cinematic Metadata -->
+  <meta property="og:title" content="R. Rusaith Ahamed — 3D Cinematic Portfolio" />
+  <meta property="og:description" content="Cinematic 3D WebGL Portfolio | Graphic Designer (1 Year Exp) & Full-Stack Tech Creator" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://zaieduhub.github.io" />
-  <meta property="og:image" content="/images/profile.jpg" />
+  <meta property="og:url" content="https://zaieduhub.github.io/zaifirstview/" />
+  <meta property="og:image" content="images/profile.jpg" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="R. Rusaith Ahamed — Portfolio" />
-  <meta name="twitter:description" content="IT Enthusiast | Tech Support | Creative Professional" />
+  <meta name="twitter:title" content="R. Rusaith Ahamed — 3D Cinematic Portfolio" />
+  <meta name="twitter:description" content="Cinematic 3D WebGL Portfolio | Graphic Designer & Creative Technologist" />
+  <meta name="twitter:image" content="images/profile.jpg" />
 
-  <title>R. Rusaith Ahamed — Portfolio</title>
+  <title>R. RUSAITH AHAMED // 3D CINEMATIC PORTFOLIO</title>
 
   <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💎</text></svg>" />
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Space Grotesk, Inter, Fira Code -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="/src/style.css" />
   <script type="module" src="/src/main.js"></script>
 </head>
 <body>
 
-  <!-- ═══════════════ THREE.JS CANVAS ═══════════════ -->
+  <!-- ═══════════════ THREE.JS WEBGL RENDER CANVAS ═══════════════ -->
   <canvas id="bg-canvas"></canvas>
 
-  <!-- ═══════════════ CUSTOM CURSOR ═══════════════ -->
+  <!-- ═══════════════ CINEMATIC ATMOSPHERE OVERLAYS ═══════════════ -->
+  <div class="film-grain" aria-hidden="true"></div>
+  <div class="cinematic-vignette" aria-hidden="true"></div>
+  <div class="anamorphic-line top" aria-hidden="true"></div>
+  <div class="anamorphic-line bottom" aria-hidden="true"></div>
+
+  <!-- ═══════════════ PRECISION CUSTOM CURSOR ═══════════════ -->
   <div class="cursor"></div>
   <div class="cursor-follower"></div>
 
-  <!-- ═══════════════ PRELOADER ═══════════════ -->
+  <!-- ═══════════════ CINEMATIC PRELOADER ═══════════════ -->
   <div id="preloader">
-    <div class="preloader-inner">
-      <div class="spinner">
-        <div class="spinner-ring"></div>
-        <div class="spinner-ring"></div>
-        <div class="spinner-ring"></div>
+    <div class="preloader-hud">
+      <div class="preloader-rings">
+        <div class="ring ring-outer"></div>
+        <div class="ring ring-middle"></div>
+        <div class="ring ring-core"></div>
+        <div class="core-glyph">Z</div>
       </div>
-      <p class="preloader-text">Loading<span class="dot-animate">...</span></p>
+      <div class="preloader-telemetry">
+        <p class="telemetry-label">// INITIALIZING CINEMATIC ENGINE</p>
+        <div class="telemetry-bar"><div class="telemetry-progress"></div></div>
+        <p class="telemetry-status">LOADING 3D ASSETS & SHADERS... <span class="blink">●</span></p>
+      </div>
     </div>
   </div>
 
-  <!-- ═══════════════ NAVIGATION ═══════════════ -->
-  <nav class="navbar" id="navbar">
+  <!-- ═══════════════ CINEMATIC TOP HUD & NAVIGATION ═══════════════ -->
+  <header class="navbar" id="navbar">
     <div class="nav-container">
-      <a href="#home" class="nav-logo">
-        <span class="logo-text">ZAI</span>
-        <span class="logo-dot">.</span>
+      <a href="#home" class="nav-brand">
+        <div class="brand-monogram">
+          <span class="mono-z">Z</span><span class="mono-ai">AI</span>
+        </div>
+        <div class="brand-meta">
+          <span class="brand-name">R. RUSAITH AHAMED</span>
+          <span class="brand-tag">CINEMATIC 3D EDITION</span>
+        </div>
       </a>
 
-      <div class="nav-menu" id="nav-menu">
-        <ul class="nav-list">
-          <li class="nav-item"><a href="#home" class="nav-link active">Home</a></li>
-          <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
-          <li class="nav-item"><a href="#skills" class="nav-link">Skills</a></li>
-          <li class="nav-item"><a href="#experience" class="nav-link">Experience</a></li>
-          <li class="nav-item"><a href="#education" class="nav-link">Education</a></li>
-          <li class="nav-item"><a href="#certifications" class="nav-link">Certifications</a></li>
-          <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
+      <!-- Central Nav Links -->
+      <nav class="nav-menu" id="nav-menu">
+        <ul class="nav-links">
+          <li><a href="#home" class="active"><span class="nav-num">01</span> HOME</a></li>
+          <li><a href="#showcase"><span class="nav-num">02</span> GRAPHIC DESIGN</a></li>
+          <li><a href="#about"><span class="nav-num">03</span> ABOUT</a></li>
+          <li><a href="#experience"><span class="nav-num">04</span> TIMELINE</a></li>
+          <li><a href="#skills"><span class="nav-num">05</span> SKILLS</a></li>
+          <li><a href="#education"><span class="nav-num">06</span> EDUCATION</a></li>
+          <li><a href="#contact"><span class="nav-num">07</span> CONTACT</a></li>
         </ul>
-      </div>
+      </nav>
 
-      <div class="nav-toggle" id="nav-toggle">
-        <span></span>
-        <span></span>
-        <span></span>
+      <!-- Right HUD Controls -->
+      <div class="nav-actions">
+        <!-- Audio Engine Toggle -->
+        <button id="audio-toggle-btn" class="hud-audio-btn" aria-label="Toggle Cinematic Audio">
+          <div class="audio-bars">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <span class="audio-text">AUDIO: MUTED</span>
+        </button>
+
+        <!-- Location Telemetry Pill -->
+        <div class="hud-telemetry-pill">
+          <span class="status-dot"></span>
+          <span class="telemetry-text">60 FPS // LK</span>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="nav-toggle" id="nav-toggle" aria-label="Open Mobile Menu">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <!-- ═══════════════ HERO SECTION ═══════════════ -->
+  <!-- ═══════════════ HERO SECTION: CINEMATIC REVEAL ═══════════════ -->
   <section id="home" class="hero-section">
     <div class="hero-container">
       <div class="hero-content">
-        <p class="hero-greeting">Hello, I'm</p>
-        <h1 class="glitch" data-text="R. Rusaith Ahamed">R. Rusaith Ahamed</h1>
-        <div class="hero-typing">
-          <span class="typing-prefix">I'm a </span>
-          <span id="typed-text"></span><span class="cursor-blink">|</span>
+        <div class="hero-eyebrow animate-on-scroll">
+          <span class="eyebrow-bracket">[</span>
+          <span class="eyebrow-text">DIRECTED BY R. RUSAITH AHAMED // EST. 2024</span>
+          <span class="eyebrow-bracket">]</span>
         </div>
-        <p class="hero-tagline">
-          A motivated IT enthusiast &amp; creative professional transforming ideas into digital realities. 
-          Specialized in ICT infrastructure, graphic design, and web development.
+
+        <h1 class="hero-title glitch animate-on-scroll delay-1" data-text="R. RUSAITH AHAMED">
+          R. RUSAITH AHAMED
+        </h1>
+
+        <div class="hero-typewriter animate-on-scroll delay-2">
+          <span class="typewriter-prefix">DISCIPLINE // </span>
+          <span id="typed-text" class="typewriter-target">Creative Graphic Designer (1 Yr Exp)</span>
+          <span class="cursor-blink">|</span>
+        </div>
+
+        <p class="hero-lead animate-on-scroll delay-2">
+          Creative Professional &amp; Full-Stack Technologist with specialized expertise in 
+          <strong>Graphic Design (1 Year Experience)</strong>, visual branding, modern 3D WebGL architectures, 
+          and AI infrastructure. Crafting high-fidelity digital experiences that bridge art and technology.
         </p>
-        <div class="hero-cta">
-          <a href="#" class="btn btn-primary">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            <span>Download CV</span>
-          </a>
-          <a href="#contact" class="btn btn-outline">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <span>Contact Me</span>
-          </a>
+
+        <!-- Key Feature Badges -->
+        <div class="hero-badges animate-on-scroll delay-3">
+          <div class="hero-badge highlight-gold">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>GRAPHIC DESIGNER (1 YR EXP)</span>
+          </div>
+          <div class="hero-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <span>WEB &amp; 3D CREATIVE</span>
+          </div>
+          <div class="hero-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <span>ICT LAB HEAD (3+ YRS)</span>
+          </div>
+          <div class="hero-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            <span>CREATOR OF "ZAI NEO" AI</span>
+          </div>
         </div>
-        <div class="hero-socials">
-          <a href="https://github.com/zaieduhub" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+
+        <!-- Call to Actions -->
+        <div class="hero-actions animate-on-scroll delay-3">
+          <a href="#showcase" class="btn btn-primary">
+            <span>EXPLORE DESIGN SHOWCASE</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          <a href="#contact" class="btn btn-secondary">
+            <span>INITIATE CONTACT</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           </a>
-          <a href="mailto:ruzaith2007@icloud.com" class="social-link" aria-label="Email">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <a href="https://github.com/zaieduhub" target="_blank" rel="noopener noreferrer" class="btn btn-ghost" aria-label="GitHub Profile">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            <span>GITHUB</span>
           </a>
         </div>
       </div>
 
-      <div class="hero-visual">
-        <div class="hero-image-wrapper">
-          <div class="hero-image-glow"></div>
-          <img src="images/profile.jpg" alt="R. Rusaith Ahamed" class="hero-image" />
-          <div class="hero-image-ring"></div>
-          <div class="hero-image-ring hero-image-ring--2"></div>
+      <!-- Right 3D Cinematic Portrait Hologram Card -->
+      <div class="hero-visual animate-on-scroll delay-2">
+        <div class="hologram-card tilt-card">
+          <div class="card-glare"></div>
+          <div class="holo-frame-brackets">
+            <span class="bracket tl"></span><span class="bracket tr"></span>
+            <span class="bracket bl"></span><span class="bracket br"></span>
+          </div>
+          <div class="holo-header">
+            <span class="holo-tag">SUBJECT // ZAI</span>
+            <span class="holo-tag">CAM: 50MM F/1.4</span>
+          </div>
+          <div class="holo-image-wrapper">
+            <img src="images/profile.jpg" alt="R. Rusaith Ahamed" class="holo-portrait" />
+            <div class="holo-scanlines"></div>
+            <div class="holo-rim-glow"></div>
+          </div>
+          <div class="holo-footer">
+            <div class="holo-meta-row">
+              <span class="meta-label">ROLE:</span>
+              <span class="meta-val">CREATIVE GRAPHIC DESIGNER</span>
+            </div>
+            <div class="holo-meta-row">
+              <span class="meta-label">EXP:</span>
+              <span class="meta-val gold-text">1 YEAR DEDICATED</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="scroll-indicator">
-      <div class="scroll-mouse">
-        <div class="scroll-wheel"></div>
+    <!-- Scroll Indicator -->
+    <a href="#showcase" class="scroll-cue" aria-label="Scroll to Showcase">
+      <div class="scroll-mouse-icon">
+        <span class="scroll-wheel-dot"></span>
       </div>
-      <span>Scroll Down</span>
+      <span class="scroll-cue-text">SCROLL TO EXPLORE</span>
+    </a>
+  </section>
+
+  <!-- ═══════════════ SPECIAL SECTION: GRAPHIC DESIGN SHOWCASE (1 YEAR EXP) ═══════════════ -->
+  <section id="showcase" class="section showcase-section">
+    <div class="section-container">
+      <div class="section-header text-center animate-on-scroll">
+        <div class="section-eyebrow">
+          <span class="highlight-cyan">// FEATURED CREATIVE SUITE</span>
+        </div>
+        <h2 class="section-title">
+          GRAPHIC DESIGN &amp; VISUAL ARTS
+        </h2>
+        <div class="experience-badge-banner">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span>1 YEAR DEDICATED EXPERIENCE // VISUAL BRANDING, DIGITAL ART &amp; IDENTITY SYSTEMS</span>
+        </div>
+        <p class="section-lead">
+          Combining deep technical proficiency with refined visual aesthetics. Exploring typography, brand architecture, 
+          modern digital media, and 3D mockups crafted during 1 year of hands-on professional freelance practice.
+        </p>
+      </div>
+
+      <!-- 6 High-Impact 3D Graphic Design Cards Grid -->
+      <div class="showcase-grid">
+
+        <!-- Card 1: Brand Identity & Logo Architecture -->
+        <article class="design-card tilt-card animate-on-scroll delay-1">
+          <div class="card-glare"></div>
+          <div class="design-preview preview-brand">
+            <div class="preview-overlay">
+              <span class="preview-badge">IDENTITY SYSTEM</span>
+              <span class="preview-year">2023 - 2024</span>
+            </div>
+            <div class="preview-art">
+              <!-- High-end vector artwork representation -->
+              <svg viewBox="0 0 300 180" class="art-svg">
+                <defs>
+                  <linearGradient id="gradBrand" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00f0ff" />
+                    <stop offset="50%" stop-color="#7c3aed" />
+                    <stop offset="100%" stop-color="#f59e0b" />
+                  </linearGradient>
+                </defs>
+                <circle cx="150" cy="90" r="65" stroke="url(#gradBrand)" stroke-width="2" fill="none" opacity="0.6" stroke-dasharray="6 4" />
+                <polygon points="150,45 190,115 110,115" stroke="#00f0ff" stroke-width="2.5" fill="none" />
+                <text x="150" y="100" fill="#ffffff" font-family="'Space Grotesk'" font-size="28" font-weight="700" text-anchor="middle">ZA</text>
+                <text x="150" y="145" fill="#a0aec0" font-family="'Fira Code'" font-size="10" letter-spacing="4" text-anchor="middle">BRAND ARCHITECTURE</text>
+              </svg>
+            </div>
+          </div>
+          <div class="design-info">
+            <div class="design-category">BRANDING // IDENTITY</div>
+            <h3 class="design-title">Visual Branding &amp; Corporate Identity</h3>
+            <p class="design-desc">
+              Designed comprehensive corporate brand identities, dynamic logo marks, complete typography style guides, 
+              and cohesive color systems for startups, academic organizations, and personal brands.
+            </p>
+            <div class="design-tags">
+              <span>Logo Design</span><span>Typography</span><span>Brand Guidelines</span><span>Vector Mastery</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2: Cyber & Futuristic Poster Art -->
+        <article class="design-card tilt-card animate-on-scroll delay-2">
+          <div class="card-glare"></div>
+          <div class="design-preview preview-poster">
+            <div class="preview-overlay">
+              <span class="preview-badge">EDITORIAL &amp; POSTER</span>
+              <span class="preview-year">1 YR EXP</span>
+            </div>
+            <div class="preview-art">
+              <svg viewBox="0 0 300 180" class="art-svg">
+                <defs>
+                  <linearGradient id="gradPoster" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#f59e0b" />
+                    <stop offset="100%" stop-color="#ef4444" />
+                  </linearGradient>
+                </defs>
+                <rect x="50" y="25" width="200" height="130" stroke="url(#gradPoster)" stroke-width="1.5" fill="none" opacity="0.7"/>
+                <line x1="50" y1="50" x2="250" y2="50" stroke="#f59e0b" stroke-width="1" opacity="0.4"/>
+                <text x="65" y="42" fill="#f59e0b" font-family="'Fira Code'" font-size="11" letter-spacing="2">NEO-TOKYO // EDITION 01</text>
+                <text x="65" y="85" fill="#ffffff" font-family="'Space Grotesk'" font-size="24" font-weight="800">FUTURE SHOCK</text>
+                <text x="65" y="105" fill="#00f0ff" font-family="'Inter'" font-size="12">GRAPHIC VISUAL SYNTHESIS</text>
+                <circle cx="220" cy="115" r="22" fill="#ef4444" opacity="0.8" />
+              </svg>
+            </div>
+          </div>
+          <div class="design-info">
+            <div class="design-category">POSTERS // EDITORIAL</div>
+            <h3 class="design-title">Cinematic Key Visuals &amp; Event Posters</h3>
+            <p class="design-desc">
+              High-impact editorial layouts and promotional event key visuals combining bold typography hierarchies, 
+              constructivist grids, and striking duotone color grading.
+            </p>
+            <div class="design-tags">
+              <span>Photoshop</span><span>Illustrator</span><span>Color Grading</span><span>Grid Systems</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3: Modern UI/UX & Spatial Web Concepts -->
+        <article class="design-card tilt-card animate-on-scroll delay-3">
+          <div class="card-glare"></div>
+          <div class="design-preview preview-ui">
+            <div class="preview-overlay">
+              <span class="preview-badge">UI/UX &amp; PRODUCT</span>
+              <span class="preview-year">PORTFOLIO</span>
+            </div>
+            <div class="preview-art">
+              <svg viewBox="0 0 300 180" class="art-svg">
+                <rect x="30" y="25" width="240" height="130" rx="10" fill="#0c1020" stroke="#38bdf8" stroke-width="1.5" />
+                <circle cx="48" cy="40" r="4" fill="#ef4444" />
+                <circle cx="62" cy="40" r="4" fill="#f59e0b" />
+                <circle cx="76" cy="40" r="4" fill="#10b981" />
+                <rect x="45" y="58" width="60" height="35" rx="4" fill="#1e293b" />
+                <rect x="115" y="58" width="140" height="35" rx="4" fill="#1e293b" />
+                <rect x="45" y="102" width="210" height="40" rx="4" fill="#131c31" stroke="#00f0ff" stroke-width="0.75" />
+                <line x1="55" y1="122" x2="160" y2="122" stroke="#00f0ff" stroke-width="2" />
+              </svg>
+            </div>
+          </div>
+          <div class="design-info">
+            <div class="design-category">UI / UX // SPATIAL INTERFACES</div>
+            <h3 class="design-title">High-Fidelity Interface Systems</h3>
+            <p class="design-desc">
+              Prototyped elegant dark-mode web interfaces, interactive dashboards, and design component systems 
+              with attention to spatial depth, micro-interactions, and glassmorphic elevations.
+            </p>
+            <div class="design-tags">
+              <span>Figma</span><span>Design Systems</span><span>Wireframing</span><span>Interactive Prototyping</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 4: Social Media Campaigns & Digital Advertising -->
+        <article class="design-card tilt-card animate-on-scroll delay-1">
+          <div class="card-glare"></div>
+          <div class="design-preview preview-social">
+            <div class="preview-overlay">
+              <span class="preview-badge">DIGITAL MARKETING</span>
+              <span class="preview-year">HIGH REACH</span>
+            </div>
+            <div class="preview-art">
+              <svg viewBox="0 0 300 180" class="art-svg">
+                <rect x="75" y="20" width="150" height="140" rx="8" fill="#161828" stroke="#a855f7" stroke-width="1.5" />
+                <circle cx="150" cy="65" r="28" fill="#a855f7" opacity="0.3" stroke="#a855f7" stroke-width="2" />
+                <path d="M142 55 L162 65 L142 75 Z" fill="#00f0ff" />
+                <rect x="95" y="108" width="110" height="8" rx="4" fill="#cbd5e1" />
+                <rect x="110" y="124" width="80" height="6" rx="3" fill="#64748b" />
+              </svg>
+            </div>
+          </div>
+          <div class="design-info">
+            <div class="design-category">SOCIAL MEDIA // ADVERTISING</div>
+            <h3 class="design-title">Social Campaign Assets &amp; Banners</h3>
+            <p class="design-desc">
+              Formulated high-conversion promotional creatives, Instagram carousel graphics, YouTube key art, and 
+              Facebook ad banners tailored to amplify brand engagement and click-through rates.
+            </p>
+            <div class="design-tags">
+              <span>Ad Creatives</span><span>Carousel Sets</span><span>Thumbnails</span><span>Visual Strategy</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 5: Vector Art & Custom Iconography -->
+        <article class="design-card tilt-card animate-on-scroll delay-2">
+          <div class="card-glare"></div>
+          <div class="design-preview preview-vector">
+            <div class="preview-overlay">
+              <span class="preview-badge">VECTOR ART</span>
+              <span class="preview-year">PRECISION</span>
+            </div>
+            <div class="preview-art">
+              <svg viewBox="0 0 300 180" class="art-svg">
+                <polygon points="150,25 210,60 210,125 150,160 90,125 90,60" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.8" />
+                <polygon points="150,45 190,70 190,115 150,140 110,115 110,70" stroke="#00f0ff" stroke-width="1.5" fill="none" />
+                <circle cx="150" cy="92.5" r="14" fill="#00ff88" opacity="0.4" />
+                <circle cx="150" cy="92.5" r="5" fill="#ffffff" />
+              </svg>
+            </div>
+          </div>
+          <div class="design-info">
+            <div class="design-category">VECTOR // ICONOGRAPHY</div>
+            <h3 class="design-title">Geometric Vector Suites &amp; Emblems</h3>
+            <p class="design-desc">
+              Constructed mathematically precise vector emblems, custom iconography collections, and scalable badge 
+              insignias engineered for flawless rendering from 16px favicons to billboard sizes.
+            </p>
+            <div class="design-tags">
+              <span>SVG Mastering</span><span>Geometry</span><span>Custom Icons</span><span>Badge Design</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 6: 3D Product & Packaging Mockups -->
+        <article class="design-card tilt-card animate-on-scroll delay-3">
+          <div class="card-glare"></div>
+          <div class="design-preview preview-mockup">
+            <div class="preview-overlay">
+              <span class="preview-badge">3D MOCKUPS</span>
+              <span class="preview-year">REALISTIC</span>
+            </div>
+            <div class="preview-art">
+              <svg viewBox="0 0 300 180" class="art-svg">
+                <!-- Isometric 3D box presentation -->
+                <polygon points="150,30 215,65 150,100 85,65" fill="#38bdf8" opacity="0.8" />
+                <polygon points="85,65 150,100 150,160 85,125" fill="#0284c7" />
+                <polygon points="215,65 150,100 150,160 215,125" fill="#0369a1" />
+                <line x1="150" y1="100" x2="150" y2="160" stroke="#ffffff" stroke-width="1.5" opacity="0.6" />
+                <text x="150" y="55" fill="#ffffff" font-family="'Space Grotesk'" font-size="12" font-weight="700" text-anchor="middle">ZAI 3D</text>
+              </svg>
+            </div>
+          </div>
+          <div class="design-info">
+            <div class="design-category">3D // PACKAGING</div>
+            <h3 class="design-title">Photorealistic Product &amp; Packaging Mockups</h3>
+            <p class="design-desc">
+              Rendered lifelike physical product mockups, stationary suites, and spatial packaging layouts with 
+              cinematic studio lighting, realistic reflections, and tactile surface textures.
+            </p>
+            <div class="design-tags">
+              <span>3D Mockups</span><span>Studio Lighting</span><span>Packaging</span><span>Realistic Shading</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
     </div>
   </section>
 
-  <!-- ═══════════════ ABOUT SECTION ═══════════════ -->
+  <!-- ═══════════════ ABOUT SECTION: PROFILE & METRICS ═══════════════ -->
   <section id="about" class="section about-section">
-    <div class="container">
-      <div class="section-header" data-animate="fade-up">
-        <span class="section-tag">&lt;about&gt;</span>
-        <h2 class="section-title">About <span class="text-gradient">Me</span></h2>
-        <div class="section-line"></div>
-      </div>
-
+    <div class="section-container">
       <div class="about-grid">
-        <div class="about-image-col" data-animate="fade-right">
-          <div class="about-image-container">
-            <div class="about-image-hex">
-              <img src="images/profile-full.jpg" alt="R. Rusaith Ahamed full profile" class="about-image" />
+
+        <!-- Left: Full-Body Cinematic Presentation -->
+        <div class="about-visual animate-on-scroll">
+          <div class="about-frame-card tilt-card">
+            <div class="card-glare"></div>
+            <div class="frame-hud-bar">
+              <span class="hud-pill">DOSSIER // R. RUSAITH AHAMED</span>
+              <span class="hud-code">ID: ZA-2024</span>
             </div>
-            <div class="about-image-border-glow"></div>
-            <div class="about-floating-badge about-floating-badge--1">
-              <span class="badge-icon">🎨</span>
-              <span class="badge-text">Designer</span>
+            <div class="about-image-container">
+              <img src="images/profile-full.jpg" alt="R. Rusaith Ahamed Full Portrait" class="about-photo" />
+              <div class="about-photo-vignette"></div>
             </div>
-            <div class="about-floating-badge about-floating-badge--2">
-              <span class="badge-icon">💻</span>
-              <span class="badge-text">Developer</span>
-            </div>
-            <div class="about-floating-badge about-floating-badge--3">
-              <span class="badge-icon">🔧</span>
-              <span class="badge-text">Technician</span>
+            <div class="frame-hud-footer">
+              <div class="hud-data-col">
+                <span class="hud-k">LOCATION</span>
+                <span class="hud-v">KINNIYA, SRI LANKA</span>
+              </div>
+              <div class="hud-data-col">
+                <span class="hud-k">STATUS</span>
+                <span class="hud-v cyan-text">AVAILABLE FOR HIRE</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="about-content-col" data-animate="fade-left">
-          <h3 class="about-heading">
-            IT Enthusiast &amp; Creative Professional
-          </h3>
-          <p class="about-bio">
-            A motivated IT enthusiast and creative professional with hands-on experience in managing IT infrastructure, 
-            network setups, and hardware troubleshooting. Skilled in graphic design, visual branding, and digital media 
-            production. Eager to leverage technical proficiency and creative problem-solving skills in freelance or remote 
-            work opportunities.
-          </p>
-          <p class="about-bio">
-            With over 3 years of experience in ICT system management and a passion for learning new technologies, 
-            I bring a unique blend of technical expertise and creative vision to every project. From maintaining computer 
-            labs to designing visual identities and developing web platforms, I thrive on challenges that sit at the 
-            intersection of technology and creativity.
+        <!-- Right: Biography & Verified Metrics -->
+        <div class="about-content animate-on-scroll delay-1">
+          <div class="section-eyebrow">
+            <span class="highlight-cyan">// ABOUT THE CREATOR</span>
+          </div>
+          <h2 class="section-title">
+            BRIDGING CREATIVE VISION WITH TECHNICAL MASTERY
+          </h2>
+
+          <p class="about-paragraph">
+            I am a motivated IT enthusiast, <strong>professional Graphic Designer (1 Year Experience)</strong>, and 
+            creative technologist with extensive hands-on experience spanning IT infrastructure management, network 
+            diagnostics, digital branding, and full-stack software development.
           </p>
 
-          <div class="about-info-grid">
-            <div class="about-info-item">
-              <span class="about-info-label">Name:</span>
-              <span class="about-info-value">R. Rusaith Ahamed</span>
+          <p class="about-paragraph">
+            Whether architecting scalable web platforms like <em>Zai Education</em>, training autonomous custom AI models 
+            like <em>Zai Neo</em>, directing full ICT lab operations for 3+ years, or crafting visual branding systems for 
+            clients, I approach every challenge with meticulous attention to detail, analytical rigor, and aesthetic excellence.
+          </p>
+
+          <!-- Core Personal Info Grid -->
+          <div class="bio-spec-grid">
+            <div class="bio-spec-item">
+              <span class="spec-label">FULL NAME</span>
+              <span class="spec-value">R. Rusaith Ahamed</span>
             </div>
-            <div class="about-info-item">
-              <span class="about-info-label">Nickname:</span>
-              <span class="about-info-value">Zai</span>
+            <div class="bio-spec-item">
+              <span class="spec-label">CALLSIGN / NICKNAME</span>
+              <span class="spec-value highlight-cyan">Zai</span>
             </div>
-            <div class="about-info-item">
-              <span class="about-info-label">Location:</span>
-              <span class="about-info-value">Kinniya, Sri Lanka</span>
+            <div class="bio-spec-item">
+              <span class="spec-label">PRIMARY DISCIPLINE</span>
+              <span class="spec-value">Graphic Design (1 Yr) &amp; Web Dev</span>
             </div>
-            <div class="about-info-item">
-              <span class="about-info-label">Languages:</span>
-              <span class="about-info-value">Tamil (Native), English (Proficient)</span>
+            <div class="bio-spec-item">
+              <span class="spec-label">COORDINATES</span>
+              <span class="spec-value">Poovarasantheevu, Kinniya - 05</span>
+            </div>
+            <div class="bio-spec-item">
+              <span class="spec-label">LANGUAGES</span>
+              <span class="spec-value">Tamil (Native), English (Proficient)</span>
+            </div>
+            <div class="bio-spec-item">
+              <span class="spec-label">COMMUNICATION</span>
+              <span class="spec-value">ruzaith2007@icloud.com</span>
             </div>
           </div>
 
-          <div class="about-stats">
-            <div class="stat-card" data-animate="fade-up">
-              <span class="stat-number" data-count="3">0</span><span class="stat-suffix">+</span>
-              <span class="stat-label">Years Experience</span>
+          <!-- Verified Stats Counter Matrix -->
+          <div class="stats-matrix">
+            <div class="stat-card">
+              <div class="stat-number" data-count="3">0</div>
+              <div class="stat-label">YEARS ICT &amp; LAB HEAD</div>
             </div>
-            <div class="stat-card" data-animate="fade-up">
-              <span class="stat-number" data-count="50">0</span><span class="stat-suffix">+</span>
-              <span class="stat-label">Certificates</span>
+            <div class="stat-card highlight-border-gold">
+              <div class="stat-number gold-text" data-count="1">0</div>
+              <div class="stat-label">YEAR GRAPHIC DESIGN</div>
             </div>
-            <div class="stat-card" data-animate="fade-up">
-              <span class="stat-number" data-count="9">0</span><span class="stat-suffix">+</span>
-              <span class="stat-label">Skill Areas</span>
+            <div class="stat-card">
+              <div class="stat-number cyan-text" data-count="50">0</div>
+              <div class="stat-label">VERIFIED CREDENTIALS</div>
             </div>
-            <div class="stat-card" data-animate="fade-up">
-              <span class="stat-number" data-count="10">0</span><span class="stat-suffix">+</span>
-              <span class="stat-label">Projects</span>
+            <div class="stat-card">
+              <div class="stat-number" data-count="10">0</div>
+              <div class="stat-label">PRODUCTION PROJECTS</div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════ SKILLS SECTION ═══════════════ -->
-  <section id="skills" class="section skills-section">
-    <div class="container">
-      <div class="section-header" data-animate="fade-up">
-        <span class="section-tag">&lt;skills&gt;</span>
-        <h2 class="section-title">My <span class="text-gradient">Skills</span></h2>
-        <div class="section-line"></div>
-      </div>
-
-      <!-- Technical Skills -->
-      <div class="skills-category" data-animate="fade-up">
-        <h3 class="skills-category-title">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          Technical Skills
-        </h3>
-        <div class="skills-grid">
-          <div class="skill-card" data-animate="fade-up">
-            <div class="skill-progress-ring" data-percent="90">
-              <svg viewBox="0 0 120 120">
-                <circle class="skill-ring-bg" cx="60" cy="60" r="52" />
-                <circle class="skill-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73" />
-              </svg>
-              <span class="skill-percent">90%</span>
-            </div>
-            <h4 class="skill-name">ICT System Management</h4>
-            <p class="skill-desc">Infrastructure & Lab Operations</p>
-          </div>
-
-          <div class="skill-card" data-animate="fade-up">
-            <div class="skill-progress-ring" data-percent="95">
-              <svg viewBox="0 0 120 120">
-                <circle class="skill-ring-bg" cx="60" cy="60" r="52" />
-                <circle class="skill-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73" />
-              </svg>
-              <span class="skill-percent">95%</span>
-            </div>
-            <h4 class="skill-name">MS Office</h4>
-            <p class="skill-desc">Word, Excel & Document Handling</p>
-          </div>
-
-          <div class="skill-card" data-animate="fade-up">
-            <div class="skill-progress-ring" data-percent="80">
-              <svg viewBox="0 0 120 120">
-                <circle class="skill-ring-bg" cx="60" cy="60" r="52" />
-                <circle class="skill-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73" />
-              </svg>
-              <span class="skill-percent">80%</span>
-            </div>
-            <h4 class="skill-name">Web Design</h4>
-            <p class="skill-desc">Basic + AI Assisted Development</p>
-          </div>
-
-          <div class="skill-card" data-animate="fade-up">
-            <div class="skill-progress-ring" data-percent="85">
-              <svg viewBox="0 0 120 120">
-                <circle class="skill-ring-bg" cx="60" cy="60" r="52" />
-                <circle class="skill-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73" />
-              </svg>
-              <span class="skill-percent">85%</span>
-            </div>
-            <h4 class="skill-name">Graphic Design</h4>
-            <p class="skill-desc">Visual Branding & Digital Media</p>
-          </div>
-
-          <div class="skill-card" data-animate="fade-up">
-            <div class="skill-progress-ring" data-percent="80">
-              <svg viewBox="0 0 120 120">
-                <circle class="skill-ring-bg" cx="60" cy="60" r="52" />
-                <circle class="skill-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73" />
-              </svg>
-              <span class="skill-percent">80%</span>
-            </div>
-            <h4 class="skill-name">Network Management</h4>
-            <p class="skill-desc">Cabling, Diagnosis & Uptime</p>
-          </div>
-
-          <div class="skill-card" data-animate="fade-up">
-            <div class="skill-progress-ring" data-percent="70">
-              <svg viewBox="0 0 120 120">
-                <circle class="skill-ring-bg" cx="60" cy="60" r="52" />
-                <circle class="skill-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73" />
-              </svg>
-              <span class="skill-percent">70%</span>
-            </div>
-            <h4 class="skill-name">AI &amp; Machine Learning</h4>
-            <p class="skill-desc">AI Model Training & Development</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Soft Skills -->
-      <div class="skills-category" data-animate="fade-up">
-        <h3 class="skills-category-title">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          Soft Skills
-        </h3>
-        <div class="skills-grid">
-          <div class="skill-card" data-animate="fade-up">
-            <div class="skill-progress-ring" data-percent="90">
-              <svg viewBox="0 0 120 120">
-                <circle class="skill-ring-bg" cx="60" cy="60" r="52" />
-                <circle class="skill-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73" />
-              </svg>
-              <span class="skill-percent">90%</span>
-            </div>
-            <h4 class="skill-name">Problem Solving</h4>
-            <p class="skill-desc">Analytical & Critical Thinking</p>
-          </div>
-
-          <div class="skill-card" data-animate="fade-up">
-            <div class="skill-progress-ring" data-percent="85">
-              <svg viewBox="0 0 120 120">
-                <circle class="skill-ring-bg" cx="60" cy="60" r="52" />
-                <circle class="skill-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73" />
-              </svg>
-              <span class="skill-percent">85%</span>
-            </div>
-            <h4 class="skill-name">Communication</h4>
-            <p class="skill-desc">Tamil (Native) & English (Proficient)</p>
-          </div>
-
-          <div class="skill-card" data-animate="fade-up">
-            <div class="skill-progress-ring" data-percent="88">
-              <svg viewBox="0 0 120 120">
-                <circle class="skill-ring-bg" cx="60" cy="60" r="52" />
-                <circle class="skill-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73" />
-              </svg>
-              <span class="skill-percent">88%</span>
-            </div>
-            <h4 class="skill-name">Leadership</h4>
-            <p class="skill-desc">Team Management & Guidance</p>
-          </div>
-
-          <div class="skill-card" data-animate="fade-up">
-            <div class="skill-progress-ring" data-percent="92">
-              <svg viewBox="0 0 120 120">
-                <circle class="skill-ring-bg" cx="60" cy="60" r="52" />
-                <circle class="skill-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73" />
-              </svg>
-              <span class="skill-percent">92%</span>
-            </div>
-            <h4 class="skill-name">Adaptability</h4>
-            <p class="skill-desc">Fast Learning & Self-Motivation</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════ EXPERIENCE SECTION ═══════════════ -->
+  <!-- ═══════════════ EXPERIENCE TIMELINE SECTION ═══════════════ -->
   <section id="experience" class="section experience-section">
-    <div class="container">
-      <div class="section-header" data-animate="fade-up">
-        <span class="section-tag">&lt;experience&gt;</span>
-        <h2 class="section-title">Work <span class="text-gradient">Experience</span></h2>
-        <div class="section-line"></div>
+    <div class="section-container">
+      <div class="section-header text-center animate-on-scroll">
+        <div class="section-eyebrow">
+          <span class="highlight-cyan">// CAREER &amp; TRACK RECORD</span>
+        </div>
+        <h2 class="section-title">PROFESSIONAL JOURNEY</h2>
+        <p class="section-lead">
+          A proven trajectory across creative design studios, high-pressure educational ICT lab handling, 
+          software engineering, and digital infrastructure operations.
+        </p>
       </div>
 
-      <div class="timeline">
-        <!-- Timeline Item 1 -->
-        <div class="timeline-item timeline-left" data-animate="fade-up">
-          <div class="timeline-dot">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <!-- Vertical Timeline -->
+      <div class="cinematic-timeline">
+
+        <!-- Role 1: Graphic Designer (1 Year) [HIGHLIGHTED] -->
+        <div class="timeline-row highlight-role animate-on-scroll">
+          <div class="timeline-meta">
+            <span class="timeline-period gold-text">1 YEAR DEDICATED</span>
+            <span class="timeline-role-type">CREATIVE &amp; VISUAL ARTS</span>
           </div>
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <h4 class="timeline-title">Computer Operator &amp; ICT Support</h4>
-              <span class="timeline-duration">3+ Years</span>
+          <div class="timeline-center">
+            <div class="timeline-orb gold-orb">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             </div>
-            <p class="timeline-company">T/Kin/Al-Mina Maha Vidyalaya</p>
-            <p class="timeline-desc">Handled exam paper typing, printing, and document preparation. Managed ICT-related tasks and supported digital activities across the institution.</p>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-card tilt-card gold-border">
+            <div class="card-glare"></div>
+            <div class="card-badge gold-badge">SPECIALIZED FOCUS</div>
+            <h3 class="role-title">Graphic Designer</h3>
+            <p class="role-org">Freelance &amp; Creative Media Practice</p>
+            <p class="role-desc">
+              Spearheaded visual branding, logo identity systems, and digital promotional content for 1 dedicated year. 
+              Produced marketing assets, high-engagement social media campaigns, event key art, and print publication materials 
+              using advanced digital graphic design workflows.
+            </p>
+            <div class="role-skills">
+              <span>Visual Branding</span><span>Logo Design</span><span>Digital Media Production</span><span>Marketing Creatives</span>
+            </div>
           </div>
         </div>
 
-        <!-- Timeline Item 2 -->
-        <div class="timeline-item timeline-right" data-animate="fade-up">
-          <div class="timeline-dot">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <!-- Role 2: ICT Lab Head (3+ Years) -->
+        <div class="timeline-row animate-on-scroll delay-1">
+          <div class="timeline-meta">
+            <span class="timeline-period">3+ YEARS</span>
+            <span class="timeline-role-type">MANAGEMENT &amp; INFRASTRUCTURE</span>
           </div>
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <h4 class="timeline-title">ICT Lab Head</h4>
-              <span class="timeline-duration">3+ Years</span>
+          <div class="timeline-center">
+            <div class="timeline-orb cyan-orb">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
             </div>
-            <p class="timeline-company">T/Kin/Al-Mina Maha Vidyalaya</p>
-            <p class="timeline-desc">Responsible for managing computer systems, maintenance, and overall lab operations. Ensured all equipment was functional and supported teaching activities.</p>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-card tilt-card">
+            <div class="card-glare"></div>
+            <h3 class="role-title">ICT Lab Head</h3>
+            <p class="role-org">T/Kin/Al-Mina Maha Vidyalaya</p>
+            <p class="role-desc">
+              Directly responsible for orchestrating the school’s core computer lab facilities. Directed hardware repairs, 
+              preventive operating system maintenance, network connectivity, and overall lab security for faculty and students.
+            </p>
+            <div class="role-skills">
+              <span>Lab Handling</span><span>Hardware Diagnostics</span><span>System Maintenance</span><span>Inventory</span>
+            </div>
           </div>
         </div>
 
-        <!-- Timeline Item 3 -->
-        <div class="timeline-item timeline-left" data-animate="fade-up">
-          <div class="timeline-dot">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <!-- Role 3: Computer Operator & ICT Support (3+ Years) -->
+        <div class="timeline-row animate-on-scroll delay-2">
+          <div class="timeline-meta">
+            <span class="timeline-period">3+ YEARS</span>
+            <span class="timeline-role-type">OPERATIONS &amp; DOCUMENTATION</span>
           </div>
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <h4 class="timeline-title">Data Entry Operator</h4>
-              <span class="timeline-duration">6 Months</span>
+          <div class="timeline-center">
+            <div class="timeline-orb">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             </div>
-            <p class="timeline-company">Freelance</p>
-            <p class="timeline-desc">Performed accurate data entry and maintained records using digital tools. Ensured data integrity and timely processing of information.</p>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-card tilt-card">
+            <div class="card-glare"></div>
+            <h3 class="role-title">Computer Operator &amp; ICT Support</h3>
+            <p class="role-org">T/Kin/Al-Mina Maha Vidyalaya</p>
+            <p class="role-desc">
+              Supervised exam paper typing, high-volume secure printing, official document preparation, and academic record systems. 
+              Provided real-time technical troubleshooting across institutional departments.
+            </p>
+            <div class="role-skills">
+              <span>Exam Paper Preparation</span><span>Document Formatting</span><span>Data Security</span><span>Technical Support</span>
+            </div>
           </div>
         </div>
 
-        <!-- Timeline Item 4 -->
-        <div class="timeline-item timeline-right" data-animate="fade-up">
-          <div class="timeline-dot">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <!-- Role 4: Web Designer & Developer (1+ Year) -->
+        <div class="timeline-row animate-on-scroll delay-1">
+          <div class="timeline-meta">
+            <span class="timeline-period">1+ YEAR</span>
+            <span class="timeline-role-type">SOFTWARE &amp; WEB PLATFORMS</span>
           </div>
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <h4 class="timeline-title">MS Office Operator</h4>
-              <span class="timeline-duration">5+ Years</span>
+          <div class="timeline-center">
+            <div class="timeline-orb cyan-orb">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
             </div>
-            <p class="timeline-company">Various Organizations</p>
-            <p class="timeline-desc">Experienced in Microsoft Word, Excel, and document handling. Prepared professional documents, spreadsheets, and reports for multiple clients.</p>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-card tilt-card">
+            <div class="card-glare"></div>
+            <h3 class="role-title">Web Designer &amp; Developer</h3>
+            <p class="role-org">"Zai Education" Web Platform</p>
+            <p class="role-desc">
+              Envisioned, architected, and built the official "Zai Education" interactive online portal. Designed intuitive 
+              learning interfaces, optimized mobile responsiveness, and implemented modern web frontends.
+            </p>
+            <div class="role-skills">
+              <span>Full-Stack Web</span><span>UI/UX Architecture</span><span>JavaScript / HTML / CSS</span><span>Responsive Design</span>
+            </div>
           </div>
         </div>
 
-        <!-- Timeline Item 5 -->
-        <div class="timeline-item timeline-left" data-animate="fade-up">
-          <div class="timeline-dot">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        <!-- Role 5: AI Trainer & Developer (1+ Year) -->
+        <div class="timeline-row animate-on-scroll delay-2">
+          <div class="timeline-meta">
+            <span class="timeline-period">1+ YEAR</span>
+            <span class="timeline-role-type">ARTIFICIAL INTELLIGENCE</span>
           </div>
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <h4 class="timeline-title">Graphic Designer</h4>
-              <span class="timeline-duration">1 Year</span>
+          <div class="timeline-center">
+            <div class="timeline-orb violet-orb">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             </div>
-            <p class="timeline-company">Freelance</p>
-            <p class="timeline-desc">Created professional designs and visuals using digital tools. Specialized in visual branding, logo design, and social media content creation.</p>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-card tilt-card">
+            <div class="card-glare"></div>
+            <h3 class="role-title">AI Trainer &amp; Developer</h3>
+            <p class="role-org">"Zai Neo" Intelligent Agent Project</p>
+            <p class="role-desc">
+              Conceptualized, configured, and fine-tuned a custom domain-specific artificial intelligence model dubbed "Zai Neo". 
+              Trained datasets, calibrated response logic, and integrated neural workflows.
+            </p>
+            <div class="role-skills">
+              <span>Model Tuning</span><span>Prompt Engineering</span><span>Dataset Preparation</span><span>Neural Workflows</span>
+            </div>
           </div>
         </div>
 
-        <!-- Timeline Item 6 -->
-        <div class="timeline-item timeline-right" data-animate="fade-up">
-          <div class="timeline-dot">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <!-- Role 6: Network Technician & Support Specialist (1+ Year) -->
+        <div class="timeline-row animate-on-scroll delay-1">
+          <div class="timeline-meta">
+            <span class="timeline-period">1+ YEAR</span>
+            <span class="timeline-role-type">NETWORKING &amp; HARDWARE</span>
           </div>
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <h4 class="timeline-title">Assistant Electrician</h4>
-              <span class="timeline-duration">1 Year</span>
+          <div class="timeline-center">
+            <div class="timeline-orb cyan-orb">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             </div>
-            <p class="timeline-company">Basic Electrical Work</p>
-            <p class="timeline-desc">Assisted with electrical installations, wiring support, and maintenance tasks. Gained practical knowledge in basic electrical systems and safety protocols.</p>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-card tilt-card">
+            <div class="card-glare"></div>
+            <h3 class="role-title">Network Technician &amp; Support Specialist</h3>
+            <p class="role-org">Infrastructure Operations</p>
+            <p class="role-desc">
+              Diagnosed network connectivity bottlenecks, deployed structured ethernet and Wi-Fi routing, crimped RJ45 patch cables, 
+              and safeguarded system network uptime.
+            </p>
+            <div class="role-skills">
+              <span>Structured Cabling</span><span>LAN / WAN Routing</span><span>Switch Config</span><span>Fault Isolation</span>
+            </div>
           </div>
         </div>
 
-        <!-- Timeline Item 7 -->
-        <div class="timeline-item timeline-left" data-animate="fade-up">
-          <div class="timeline-dot">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        <!-- Role 7: MS Office Operator (5+ Years) -->
+        <div class="timeline-row animate-on-scroll delay-2">
+          <div class="timeline-meta">
+            <span class="timeline-period">5+ YEARS</span>
+            <span class="timeline-role-type">DATA ARCHITECTURE &amp; SUITE</span>
           </div>
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <h4 class="timeline-title">Web Designer &amp; Developer</h4>
-              <span class="timeline-duration">1+ Year</span>
+          <div class="timeline-center">
+            <div class="timeline-orb">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
             </div>
-            <p class="timeline-company">Zai Education Platform</p>
-            <p class="timeline-desc">Designed and developed the "Zai Education" web platform. Built responsive interfaces and managed content delivery for educational resources.</p>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-card tilt-card">
+            <div class="card-glare"></div>
+            <h3 class="role-title">MS Office Operator</h3>
+            <p class="role-org">Professional Documentation Practice</p>
+            <p class="role-desc">
+              Over 5 years of master-level proficiency in Microsoft Word, Excel, and PowerPoint. Automated spreadsheet calculations, 
+              designed complex document templates, and built formatted reporting workflows.
+            </p>
+            <div class="role-skills">
+              <span>Advanced Excel Formulas</span><span>Word Layouts</span><span>Data Presentation</span><span>Document Auditing</span>
+            </div>
           </div>
         </div>
 
-        <!-- Timeline Item 8 -->
-        <div class="timeline-item timeline-right" data-animate="fade-up">
-          <div class="timeline-dot">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.57-3.25 3.93L12 22l-.75-12.07A4.001 4.001 0 0 1 12 2z"/><circle cx="12" cy="6" r="1"/></svg>
+        <!-- Role 8: Assistant Electrician (1 Year) -->
+        <div class="timeline-row animate-on-scroll delay-1">
+          <div class="timeline-meta">
+            <span class="timeline-period">1 YEAR</span>
+            <span class="timeline-role-type">HARDWARE &amp; ELECTRICAL</span>
           </div>
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <h4 class="timeline-title">AI Trainer &amp; Developer</h4>
-              <span class="timeline-duration">1+ Year</span>
+          <div class="timeline-center">
+            <div class="timeline-orb">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
             </div>
-            <p class="timeline-company">Zai Neo AI Project</p>
-            <p class="timeline-desc">Developed and trained a custom AI model named "Zai Neo." Explored machine learning frameworks and natural language processing techniques.</p>
+          </div>
+          <div class="timeline-card tilt-card">
+            <div class="card-glare"></div>
+            <h3 class="role-title">Assistant Electrician</h3>
+            <p class="role-org">Technical Services</p>
+            <p class="role-desc">
+              Provided critical hands-on wiring support, electrical system installations, circuit breaker maintenance, and safely 
+              managed equipment power supplies.
+            </p>
+            <div class="role-skills">
+              <span>Electrical Wiring</span><span>Circuit Support</span><span>Power Distribution</span><span>Safety Protocols</span>
+            </div>
           </div>
         </div>
 
-        <!-- Timeline Item 9 -->
-        <div class="timeline-item timeline-left" data-animate="fade-up">
-          <div class="timeline-dot">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-          </div>
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <h4 class="timeline-title">Network Technician &amp; Support Specialist</h4>
-              <span class="timeline-duration">1+ Year</span>
-            </div>
-            <p class="timeline-company">Freelance / Institutional</p>
-            <p class="timeline-desc">Diagnosed network connectivity issues, managed structured cabling, and ensured system uptime. Provided technical support for LAN/WAN infrastructure.</p>
-          </div>
-        </div>
-
-        <!-- Timeline center line -->
-        <div class="timeline-line"></div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════ EDUCATION SECTION ═══════════════ -->
+  <!-- ═══════════════ SKILLS MATRIX SECTION ═══════════════ -->
+  <section id="skills" class="section skills-section">
+    <div class="section-container">
+      <div class="section-header text-center animate-on-scroll">
+        <div class="section-eyebrow">
+          <span class="highlight-cyan">// CORE COMPETENCY MATRIX</span>
+        </div>
+        <h2 class="section-title">TECHNICAL &amp; CREATIVE PROFICIENCY</h2>
+        <p class="section-lead">
+          Verified skills evaluated across design production, computing systems, software development, and leadership.
+        </p>
+      </div>
+
+      <!-- Skills Circular Gauges Grid -->
+      <div class="skills-grid">
+
+        <!-- Skill 1: Graphic Design (Special Focus) -->
+        <div class="skill-card tilt-card highlight-card-gold animate-on-scroll delay-1">
+          <div class="card-glare"></div>
+          <div class="skill-circle" data-percentage="92">
+            <svg class="progress-ring" width="130" height="130">
+              <circle class="progress-ring-bg" cx="65" cy="65" r="54" />
+              <circle class="progress-ring-circle gold-stroke" cx="65" cy="65" r="54" />
+            </svg>
+            <span class="skill-percentage gold-text">92%</span>
+          </div>
+          <h3 class="skill-name">Graphic Design</h3>
+          <p class="skill-desc">Visual Branding, Identity &amp; Digital Art (1 Year Exp)</p>
+        </div>
+
+        <!-- Skill 2: ICT System Management & Lab Handling -->
+        <div class="skill-card tilt-card animate-on-scroll delay-2">
+          <div class="card-glare"></div>
+          <div class="skill-circle" data-percentage="95">
+            <svg class="progress-ring" width="130" height="130">
+              <circle class="progress-ring-bg" cx="65" cy="65" r="54" />
+              <circle class="progress-ring-circle cyan-stroke" cx="65" cy="65" r="54" />
+            </svg>
+            <span class="skill-percentage cyan-text">95%</span>
+          </div>
+          <h3 class="skill-name">ICT Lab Handling</h3>
+          <p class="skill-desc">Hardware Diagnostics, Maintenance &amp; Operations</p>
+        </div>
+
+        <!-- Skill 3: MS Office Suite Proficiency -->
+        <div class="skill-card tilt-card animate-on-scroll delay-3">
+          <div class="card-glare"></div>
+          <div class="skill-circle" data-percentage="96">
+            <svg class="progress-ring" width="130" height="130">
+              <circle class="progress-ring-bg" cx="65" cy="65" r="54" />
+              <circle class="progress-ring-circle" cx="65" cy="65" r="54" />
+            </svg>
+            <span class="skill-percentage">96%</span>
+          </div>
+          <h3 class="skill-name">MS Office Operator</h3>
+          <p class="skill-desc">Word, Excel Formulas &amp; Document Preparation (5+ Yrs)</p>
+        </div>
+
+        <!-- Skill 4: Web Designing & Modern Development -->
+        <div class="skill-card tilt-card animate-on-scroll delay-1">
+          <div class="card-glare"></div>
+          <div class="skill-circle" data-percentage="88">
+            <svg class="progress-ring" width="130" height="130">
+              <circle class="progress-ring-bg" cx="65" cy="65" r="54" />
+              <circle class="progress-ring-circle cyan-stroke" cx="65" cy="65" r="54" />
+            </svg>
+            <span class="skill-percentage cyan-text">88%</span>
+          </div>
+          <h3 class="skill-name">Web Development</h3>
+          <p class="skill-desc">HTML5, CSS3, JavaScript &amp; AI-Assisted Architecture</p>
+        </div>
+
+        <!-- Skill 5: AI Model Training & Workflows -->
+        <div class="skill-card tilt-card animate-on-scroll delay-2">
+          <div class="card-glare"></div>
+          <div class="skill-circle" data-percentage="82">
+            <svg class="progress-ring" width="130" height="130">
+              <circle class="progress-ring-bg" cx="65" cy="65" r="54" />
+              <circle class="progress-ring-circle violet-stroke" cx="65" cy="65" r="54" />
+            </svg>
+            <span class="skill-percentage violet-text">82%</span>
+          </div>
+          <h3 class="skill-name">AI &amp; Neural Systems</h3>
+          <p class="skill-desc">Custom AI Training (Zai Neo), Prompt Engineering</p>
+        </div>
+
+        <!-- Skill 6: Network Infrastructure & Cabling -->
+        <div class="skill-card tilt-card animate-on-scroll delay-3">
+          <div class="card-glare"></div>
+          <div class="skill-circle" data-percentage="86">
+            <svg class="progress-ring" width="130" height="130">
+              <circle class="progress-ring-bg" cx="65" cy="65" r="54" />
+              <circle class="progress-ring-circle cyan-stroke" cx="65" cy="65" r="54" />
+            </svg>
+            <span class="skill-percentage cyan-text">86%</span>
+          </div>
+          <h3 class="skill-name">Network Specialist</h3>
+          <p class="skill-desc">Structured Cabling, Troubleshooting &amp; Uptime</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ EDUCATION & CERTIFICATIONS ═══════════════ -->
   <section id="education" class="section education-section">
-    <div class="container">
-      <div class="section-header" data-animate="fade-up">
-        <span class="section-tag">&lt;education&gt;</span>
-        <h2 class="section-title">My <span class="text-gradient">Education</span></h2>
-        <div class="section-line"></div>
+    <div class="section-container">
+      <div class="section-header text-center animate-on-scroll">
+        <div class="section-eyebrow">
+          <span class="highlight-cyan">// ACADEMIC &amp; CREDENTIAL AUDIT</span>
+        </div>
+        <h2 class="section-title">EDUCATION &amp; CERTIFICATIONS</h2>
+        <p class="section-lead">
+          Formal academic training supplemented by verified industry certifications.
+        </p>
       </div>
 
-      <div class="education-grid">
-        <div class="education-card" data-animate="fade-up">
-          <div class="education-card-gradient"></div>
-          <div class="education-card-content">
-            <div class="education-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      <div class="edu-cert-split">
+
+        <!-- Left: Academic Degrees -->
+        <div class="edu-column animate-on-scroll">
+          <h3 class="subsection-title">ACADEMIC FOUNDATION</h3>
+
+          <!-- Card 1: GCE Advanced Level -->
+          <div class="education-card tilt-card highlight-border">
+            <div class="card-glare"></div>
+            <div class="edu-status-pill ongoing-pill">ONGOING // EXPECTED 2026</div>
+            <h4 class="edu-degree">GCE Advanced Level (Arts Stream)</h4>
+            <p class="edu-institution">T/Kin/Al-Mina Maha Vidyalaya</p>
+            <div class="edu-subjects">
+              <span class="subject-chip">Information &amp; Communication Technology (ICT)</span>
+              <span class="subject-chip">Media Studies</span>
+              <span class="subject-chip">Geography</span>
             </div>
-            <div class="education-status education-status--completed">Completed</div>
-            <h4 class="education-title">GCE Ordinary Level</h4>
-            <p class="education-school">T/Kin/Al - Mina Maha Vidyalaya</p>
-            <p class="education-year">2024 (2025)</p>
-            <div class="education-result">
-              <span class="result-badge result-badge--a">2A</span>
-              <span class="result-badge result-badge--b">3B</span>
-              <span class="result-badge result-badge--c">4C</span>
+          </div>
+
+          <!-- Card 2: GCE Ordinary Level -->
+          <div class="education-card tilt-card">
+            <div class="card-glare"></div>
+            <div class="edu-status-pill completed-pill">COMPLETED // 2024 (2025)</div>
+            <h4 class="edu-degree">GCE Ordinary Level</h4>
+            <p class="edu-institution">T/Kin/Al-Mina Maha Vidyalaya</p>
+            <div class="result-badge-list">
+              <span class="grade-badge grade-a">2 A Grades</span>
+              <span class="grade-badge grade-b">3 B Grades</span>
+              <span class="grade-badge grade-c">4 C Grades</span>
             </div>
           </div>
         </div>
 
-        <div class="education-card" data-animate="fade-up">
-          <div class="education-card-gradient"></div>
-          <div class="education-card-content">
-            <div class="education-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        <!-- Right: Professional Certifications -->
+        <div class="cert-column animate-on-scroll delay-1">
+          <h3 class="subsection-title">VERIFIED CERTIFICATIONS (50+ CREDENTIALS)</h3>
+
+          <div class="cert-grid">
+
+            <div class="cert-card tilt-card">
+              <div class="card-glare"></div>
+              <div class="cert-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div class="cert-info">
+                <h4 class="cert-title">Cybersecurity &amp; Ethical Hacking</h4>
+                <p class="cert-issuer">Capricioase University</p>
+                <span class="cert-meta">Certificate of Completion // Security Audit</span>
+              </div>
             </div>
-            <div class="education-status education-status--ongoing">Ongoing</div>
-            <h4 class="education-title">GCE Advanced Level</h4>
-            <p class="education-subtitle">Arts Stream</p>
-            <p class="education-school">T/Kin/Al - Mina Maha Vidyalaya</p>
-            <p class="education-year">Expected 2026</p>
-            <div class="education-subjects">
-              <span class="subject-tag">ICT</span>
-              <span class="subject-tag">Media Studies</span>
-              <span class="subject-tag">Geography</span>
+
+            <div class="cert-card tilt-card">
+              <div class="card-glare"></div>
+              <div class="cert-icon gold-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="6" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="18"/></svg>
+              </div>
+              <div class="cert-info">
+                <h4 class="cert-title">Cryptocurrency &amp; Blockchain Systems</h4>
+                <p class="cert-issuer">Coin Trade Academy</p>
+                <span class="cert-meta">Participation &amp; Technical Architecture</span>
+              </div>
             </div>
+
+            <div class="cert-card tilt-card">
+              <div class="card-glare"></div>
+              <div class="cert-icon cyan-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </div>
+              <div class="cert-info">
+                <h4 class="cert-title">Web Design &amp; School Website Development</h4>
+                <p class="cert-issuer">LK Domain Registry (.LK)</p>
+                <span class="cert-meta">Official Seminar Certification // Web Deployment</span>
+              </div>
+            </div>
+
+            <div class="cert-card tilt-card">
+              <div class="card-glare"></div>
+              <div class="cert-icon violet-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </div>
+              <div class="cert-info">
+                <h4 class="cert-title">50+ ICT, Technical &amp; Academic Honors</h4>
+                <p class="cert-issuer">Multiple Institutional Bodies</p>
+                <span class="cert-meta">Full Verification Dossier Available on Request</span>
+              </div>
+            </div>
+
           </div>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════ CERTIFICATIONS SECTION ═══════════════ -->
-  <section id="certifications" class="section certifications-section">
-    <div class="container">
-      <div class="section-header" data-animate="fade-up">
-        <span class="section-tag">&lt;certifications&gt;</span>
-        <h2 class="section-title">My <span class="text-gradient">Certifications</span></h2>
-        <div class="section-line"></div>
-      </div>
-
-      <div class="certifications-grid" data-animate="fade-up">
-        <div class="cert-card" data-tilt>
-          <div class="cert-card-inner">
-            <div class="cert-icon">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15l-2 5 2-1 2 1-2-5z"/><circle cx="12" cy="9" r="6"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/></svg>
-            </div>
-            <h4 class="cert-title">Cybersecurity &amp; Ethical Hacking</h4>
-            <p class="cert-issuer">Capricioase University</p>
-            <span class="cert-type">Certificate of Completion</span>
-          </div>
-        </div>
-
-        <div class="cert-card" data-tilt>
-          <div class="cert-card-inner">
-            <div class="cert-icon">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            </div>
-            <h4 class="cert-title">Cryptocurrency Workshop</h4>
-            <p class="cert-issuer">Coin Trade Academy</p>
-            <span class="cert-type">Participation Certificate</span>
-          </div>
-        </div>
-
-        <div class="cert-card" data-tilt>
-          <div class="cert-card-inner">
-            <div class="cert-icon">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-            </div>
-            <h4 class="cert-title">Web Designing Seminar &amp; School Website Development</h4>
-            <p class="cert-issuer">LK Domain Initiative</p>
-            <span class="cert-type">Certificate of Achievement</span>
-          </div>
-        </div>
-
-        <div class="cert-card" data-tilt>
-          <div class="cert-card-inner">
-            <div class="cert-icon">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-            </div>
-            <h4 class="cert-title">ICT, Technical &amp; Academic Activities</h4>
-            <p class="cert-issuer">Multiple Institutions</p>
-            <span class="cert-type">50+ Certificates</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════ CONTACT SECTION ═══════════════ -->
+  <!-- ═══════════════ CINEMATIC CONTACT TERMINAL ═══════════════ -->
   <section id="contact" class="section contact-section">
-    <div class="container">
-      <div class="section-header" data-animate="fade-up">
-        <span class="section-tag">&lt;contact&gt;</span>
-        <h2 class="section-title">Get In <span class="text-gradient">Touch</span></h2>
-        <div class="section-line"></div>
+    <div class="section-container">
+      <div class="section-header text-center animate-on-scroll">
+        <div class="section-eyebrow">
+          <span class="highlight-cyan">// INITIATE SECURE TRANSMISSION</span>
+        </div>
+        <h2 class="section-title">CONNECT WITH ZAI</h2>
+        <p class="section-lead">
+          Available for freelance graphic design, visual branding contracts, web engineering, and technical consultations.
+        </p>
       </div>
 
       <div class="contact-grid">
-        <div class="contact-info" data-animate="fade-right">
-          <h3 class="contact-info-heading">Let's talk about everything!</h3>
-          <p class="contact-info-text">
-            Feel free to reach out if you have any questions, project ideas, or collaboration 
-            opportunities. I'm always open to discussing new projects and creative ideas.
-          </p>
 
-          <div class="contact-details">
-            <div class="contact-detail-item">
-              <div class="contact-detail-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              </div>
-              <div class="contact-detail-text">
-                <span class="contact-detail-label">Phone</span>
-                <a href="tel:+94750761016" class="contact-detail-value">+94 75 076 1016</a>
-              </div>
+        <!-- Left: Transmission Channels -->
+        <div class="contact-info-panel animate-on-scroll">
+          <div class="panel-header">
+            <span class="panel-tag">// DIRECT COORDINATES</span>
+          </div>
+
+          <a href="tel:+94750761016" class="contact-channel-item">
+            <div class="channel-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </div>
-
-            <div class="contact-detail-item">
-              <div class="contact-detail-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              </div>
-              <div class="contact-detail-text">
-                <span class="contact-detail-label">Email</span>
-                <a href="mailto:ruzaith2007@icloud.com" class="contact-detail-value">ruzaith2007@icloud.com</a>
-              </div>
+            <div class="channel-details">
+              <span class="channel-label">TELEPHONE / WHATSAPP</span>
+              <span class="channel-value">+94 75 076 1016</span>
             </div>
+          </a>
 
-            <div class="contact-detail-item">
-              <div class="contact-detail-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              </div>
-              <div class="contact-detail-text">
-                <span class="contact-detail-label">Location</span>
-                <span class="contact-detail-value">Poovarasantheevu, Kinniya - 05, Sri Lanka</span>
-              </div>
+          <a href="mailto:ruzaith2007@icloud.com" class="contact-channel-item">
+            <div class="channel-icon cyan-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             </div>
+            <div class="channel-details">
+              <span class="channel-label">DIRECT EMAIL</span>
+              <span class="channel-value">ruzaith2007@icloud.com</span>
+            </div>
+          </a>
 
-            <div class="contact-detail-item">
-              <div class="contact-detail-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-              </div>
-              <div class="contact-detail-text">
-                <span class="contact-detail-label">Website</span>
-                <a href="https://zaieduhub.github.io" target="_blank" rel="noopener noreferrer" class="contact-detail-value">zaieduhub.github.io</a>
-              </div>
+          <div class="contact-channel-item">
+            <div class="channel-icon gold-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div class="channel-details">
+              <span class="channel-label">PHYSICAL LOCATION</span>
+              <span class="channel-value">Poovarasantheevu, Kinniya - 05, Sri Lanka</span>
             </div>
           </div>
 
-          <div class="contact-socials">
-            <a href="https://github.com/zaieduhub" target="_blank" rel="noopener noreferrer" class="contact-social-link" aria-label="GitHub">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="contact-social-link" aria-label="LinkedIn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-            </a>
-            <a href="mailto:ruzaith2007@icloud.com" class="contact-social-link" aria-label="Email">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            </a>
-          </div>
+          <a href="https://zaieduhub.github.io" target="_blank" rel="noopener noreferrer" class="contact-channel-item">
+            <div class="channel-icon violet-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <div class="channel-details">
+              <span class="channel-label">GITHUB DOMAIN</span>
+              <span class="channel-value">zaieduhub.github.io</span>
+            </div>
+          </a>
         </div>
 
-        <div class="contact-form-wrapper" data-animate="fade-left">
-          <form id="contact-form" class="contact-form">
-            <div class="form-group">
-              <label for="form-name" class="form-label">Your Name</label>
-              <input type="text" id="form-name" name="name" class="form-input" placeholder="John Doe" required />
-              <div class="form-input-line"></div>
+        <!-- Right: Interactive Cyber Form -->
+        <div class="contact-form-panel animate-on-scroll delay-1">
+          <form id="contact-form" class="cyber-form">
+            <div class="form-header">
+              <span class="form-title">ENCRYPTED MESSAGE DISPATCH</span>
+              <span class="form-status">STATUS: ONLINE</span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="form-name">YOUR IDENTITY / FULL NAME *</label>
+                <input type="text" id="form-name" required placeholder="e.g. Elena Vance" />
+              </div>
+              <div class="form-group">
+                <label for="form-email">ELECTRONIC MAIL *</label>
+                <input type="email" id="form-email" required placeholder="e.g. elena@domain.com" />
+              </div>
             </div>
 
             <div class="form-group">
-              <label for="form-email" class="form-label">Your Email</label>
-              <input type="email" id="form-email" name="email" class="form-input" placeholder="john@example.com" required />
-              <div class="form-input-line"></div>
+              <label for="form-subject">SUBJECT / PROJECT INQUIRY</label>
+              <input type="text" id="form-subject" placeholder="e.g. Graphic Design Brand Package / Web 3D Project" />
             </div>
 
             <div class="form-group">
-              <label for="form-subject" class="form-label">Subject</label>
-              <input type="text" id="form-subject" name="subject" class="form-input" placeholder="Project Inquiry" required />
-              <div class="form-input-line"></div>
+              <label for="form-message">TRANSMISSION CONTENT *</label>
+              <textarea id="form-message" rows="5" required placeholder="Describe your vision, scope, timelines, or specifications..."></textarea>
             </div>
 
-            <div class="form-group">
-              <label for="form-message" class="form-label">Message</label>
-              <textarea id="form-message" name="message" class="form-input form-textarea" placeholder="Tell me about your project..." rows="5" required></textarea>
-              <div class="form-input-line"></div>
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-submit">
-              <span>Send Message</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <button type="submit" class="btn btn-primary submit-btn">
+              <span>DISPATCH TRANSMISSION</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
           </form>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <!-- ═══════════════ CINEMATIC FOOTER ═══════════════ -->
   <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
+    <div class="footer-container">
+      <div class="footer-top">
         <div class="footer-brand">
-          <a href="#home" class="footer-logo">
-            <span class="logo-text">ZAI</span><span class="logo-dot">.</span>
-          </a>
-          <p class="footer-tagline">IT Enthusiast | Tech Support | Creative Professional</p>
+          <div class="brand-monogram">
+            <span class="mono-z">Z</span><span class="mono-ai">AI</span>
+          </div>
+          <span class="footer-tagline">3D CINEMATIC PORTFOLIO // R. RUSAITH AHAMED</span>
         </div>
-
-        <div class="footer-links">
-          <a href="#home">Home</a>
-          <a href="#about">About</a>
-          <a href="#skills">Skills</a>
-          <a href="#experience">Experience</a>
-          <a href="#contact">Contact</a>
-        </div>
-
         <div class="footer-socials">
           <a href="https://github.com/zaieduhub" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-          </a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
           </a>
           <a href="mailto:ruzaith2007@icloud.com" aria-label="Email">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           </a>
         </div>
       </div>
-
       <div class="footer-bottom">
-        <p>&copy; 2024 R. Rusaith Ahamed. All Rights Reserved.</p>
+        <p class="copyright">
+          &copy; 2024 R. RUSAITH AHAMED. ALL RIGHTS RESERVED. // DESIGNED WITH THREE.JS &amp; WEBGL
+        </p>
+        <span class="footer-coords">LAT: 08&deg;34'N // LON: 81&deg;13'E</span>
       </div>
     </div>
   </footer>
